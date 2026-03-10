@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Adaptive Crossfiltered Table</title>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+<style>
+    @font-face {
+  font-family: "Benton";
+  src: url("Benton Sans/Benton Sans Book.otf");
+}
+@font-face {
+  font-family: "BentonStrong";
+  src: url("Benton Sans/Benton Sans Bold.otf");
+}
+@font-face {
+  font-family: "BentonMedium";
+  src: url("Benton Sans/Benton Sans Medium.otf");
+}
+  :root{
+    --bg:#ffffff;
+    --text:#000000;
+    --muted:#666666;
+    --line:#d9d9d9;
+    --panel:#f7f7f7;
+    --hover:#f3f3f3;
+    --active:#000000;
+    --activeText:#ffffff;
+    --bar:#cfcfcf;
+    --barHover:#a8a8a8;
+    --barActive:#000000;
+  }
+
+  * { box-sizing:border-box; }
+
+  body{
+    margin:0;
+    font-family: "Benton", sans-serif;
+    color:var(--text);
+    background:var(--bg);
+  }
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:16px 18px 14px;
+  }
+
+  h1{
+    margin:0 0 12px;
+    font-size:24px;
+    line-height:1.15;
+  }
+
+  .controls{
+    display:grid;
+  grid-template-columns: 400px 520px 320px;
+    gap:16px;
+    align-items:start;
+  }
+
+  .panel{
+    min-width:0;
+  }
+
+  .panel h2{
+    margin:0 0 8px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+
+  button,
+  input{
+    font:inherit;
+  }
+
+  #clearFilters{
+    appearance:none;
+    background:#fff;
+    color:#000;
+    padding:8px 12px;
+    cursor:pointer;
+  }
+
+  #clearFilters:hover{
+    background:var(--hover);
+  }
+
+  .meta{
+    margin-top:10px;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .filter-btn{
+    appearance:none;
+    background:#fff;
+    color:#000;
+    padding:2px 4px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:2px;
+    line-height:1;
+    font-size:12px;
+    border:1px solid #000;
+  }
+
+  .filter-btn:hover{
+    background:var(--hover);
+  }
+
+  .filter-btn.active{
+    background:var(--active);
+    color:var(--activeText);
+  }
+
+  .filter-btn .count{
+    font-size:12px;
+    opacity:.7;
+  }
+
+  .filter-btn.active .count{
+    opacity:.85;
+  }
+
+  .button-group{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  .tag-search-wrap{
+    margin:0 0 10px;
+  }
+
+  #tagSearch{
+    width:100%;
+    padding:9px 11px;
+    background:#fff;
+  }
+
+  #tagSearch:focus{
+    outline:none;
+  }
+
+  .hint{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.4;
+    padding:10px 12px;
+  }
+
+  .selected-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:0 0 10px;
+  }
+
+  .selected-chip-label{
+    display:block;
+    margin:0 0 6px;
+    font-size:12px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+
+  .show-more-wrap{
+    margin-top:10px;
+  }
+
+  .secondary-btn{
+    appearance:none;
+    background:#fff;
+    color:#000;
+    padding:8px 12px;
+    cursor:pointer;
+  }
+
+  .secondary-btn:hover{
+    background:var(--hover);
+  }
+
+  .section-chart-wrap{
+    background:#fff;
+  }
+
+  .section-chart-note{
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 8px;
+  }
+
+  #sectionChart{
+    width:100%;
+  }
+
+  .section-bar-row text{
+    font-size:11px;
+    fill:#000;
+  }
+
+  .section-bar-row .count-label{
+    font-size:10px;
+    fill:#555;
+  }
+
+  .section-bar{
+    fill:var(--bar);
+    cursor:pointer;
+  }
+
+  .section-bar:hover{
+    fill:var(--barHover);
+  }
+
+  .section-bar.active{
+    fill:var(--barActive);
+  }
+
+  .section-bar-label{
+    cursor:pointer;
+  }
+
+  .section-bar-row.active .section-bar-label,
+  .section-bar-row.active .count-label{
+    font-weight:bold;
+  }
+
+  .table-wrap{
+    padding:18px;
+    overflow-x:auto;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+  }
+
+  thead th{
+    /* position:sticky; */
+    top:160px;
+    z-index:20;
+    background:var(--bg);
+    text-align:left;
+    padding:10px 8px;
+    border-bottom:1px solid #000;
+    white-space:nowrap;
+  }
+
+  tbody td{
+    padding:10px 8px;
+    border-bottom:1px solid #e8e8e8;
+    vertical-align:top;
+  }
+
+  tbody tr:hover{
+    background:#fafafa;
+  }
+
+  .muted{
+    color:var(--muted);
+  }
+
+  @media (max-width: 1080px){
+    .controls{
+  grid-template-columns: 400px 520px 320px;
+    }
+    thead th{
+      top:310px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Amicus Brief Collection</h1>
+
+  <div class="controls">
+
+    <div class="panel">
+      <h2>Section</h2>
+      <div class="section-chart-wrap">
+        <div class="section-chart-note">Click a bar to filter by section.</div>
+        <div id="sectionChart"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Tags</h2>
+      <div id="tagPanel"></div>
+    </div>
+    <div class="panel">
+      <button id="clearFilters">Clear filters</button>
+      <div id="resultCount" class="meta">0 rows</div>
+    </div>
+  </div>
+    
+</div>
+
+<div class="table-wrap">
+  <table id="dataTable">
+    <thead>
+      <tr id="tableHead"></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script>
+/* =========================
+   CONFIG
+========================= */
+
+const CSV_PATH = "cases_from_docx.csv";
+
+const SECTION_COLUMN = "section";
+const TAGS_COLUMN = "tags";
+
+const TITLE_SOURCE_COLUMN = "title";
+const EXTRA_TEXT_COLUMN = "description"; // change to your actual text column
+
+const DISPLAY_COLUMNS = [
+  "title",
+  "year",
+  "section",
+  "description",
+  "tags"
+];
+
+const TAG_SEPARATOR = ",";
+const TAG_MULTISELECT = true;
+const TAGS_VISIBLE_DEFAULT = 20;
+
+const SECTION_CHART = {
+  width: 320,
+  rowHeight: 12,
+  labelWidth: 180,
+  countWidth: 10,
+  barHeight: 8,
+  top: 4,
+  right: 8,
+  bottom: 4,
+  left: 0
+};
+
+/* =========================
+   STATE
+========================= */
+
+let rawRows = [];
+let filteredRows = [];
+
+const activeSections = new Set();
+const activeTags = new Set();
+
+let tagSearchQuery = "";
+let showAllTags = false;
+
+/* =========================
+   HELPERS
+========================= */
+
+function normalizeValue(v) {
+  return (v ?? "").toString().trim();
+}
+
+function parseTags(cellValue) {
+  const raw = normalizeValue(cellValue);
+  if (!raw) return [];
+  return raw
+    .split(TAG_SEPARATOR)
+    .map(d => d.trim())
+    .filter(Boolean);
+}
+
+function extractTrailingYearFromTitle(title) {
+  const raw = normalizeValue(title);
+  const match = raw.match(/\s*\((\d{4})\)\s*$/);
+
+  if (!match) {
+    return {
+      cleanTitle: raw,
+      year: ""
+    };
+  }
+
+  return {
+    cleanTitle: raw.replace(/\s*\(\d{4}\)\s*$/, "").trim(),
+    year: match[1]
+  };
+}
+
+function uniqueSorted(values) {
+  return [...new Set(values.filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" })
+  );
+}
+
+function rowMatchesSection(row) {
+  if (activeSections.size === 0) return true;
+  return activeSections.has(normalizeValue(row[SECTION_COLUMN]));
+}
+
+function rowMatchesTags(row) {
+  if (activeTags.size === 0) return true;
+  const rowTags = row.__parsedTags || [];
+  return rowTags.some(tag => activeTags.has(tag));
+}
+
+function updateCount() {
+  const el = document.getElementById("resultCount");
+  el.textContent = `${filteredRows.length} brief${filteredRows.length === 1 ? "" : "s"}`;
+}
+
+function buildTableHead() {
+  const tr = document.getElementById("tableHead");
+  tr.innerHTML = "";
+
+  DISPLAY_COLUMNS.forEach(col => {
+    const th = document.createElement("th");
+    th.textContent = col;
+    tr.appendChild(th);
+  });
+}
+
+function renderTable(rows) {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+
+  if (!rows.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = DISPLAY_COLUMNS.length;
+    td.className = "muted";
+    td.textContent = "No matching rows.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  rows.forEach(row => {
+    const tr = document.createElement("tr");
+
+    DISPLAY_COLUMNS.forEach(col => {
+      const td = document.createElement("td");
+
+      if (col === TAGS_COLUMN) {
+        td.textContent = (row.__parsedTags || []).join(", ");
+      } else {
+        td.textContent = normalizeValue(row[col]);
+      }
+
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+function applyFilters() {
+  filteredRows = rawRows.filter(row => rowMatchesSection(row) && rowMatchesTags(row));
+  renderTable(filteredRows);
+  updateCount();
+}
+
+/* =========================
+   SECTION CHART DATA
+========================= */
+
+function getSectionCounts() {
+  const counts = new Map();
+
+  rawRows.forEach(row => {
+    if (!rowMatchesTags(row)) return;
+    const section = normalizeValue(row[SECTION_COLUMN]);
+    if (!section) return;
+    counts.set(section, (counts.get(section) || 0) + 1);
+  });
+
+  return [...counts.entries()]
+    .map(([section, count]) => ({ section, count }))
+    .sort((a, b) => {
+      const diff = b.count - a.count;
+      if (diff !== 0) return diff;
+      return a.section.localeCompare(b.section, undefined, { sensitivity: "base" });
+    });
+}
+
+/* =========================
+   TAG DATA
+========================= */
+function getAdaptiveTagData() {
+  const counts = {};
+
+  rawRows.forEach(row => {
+    if (!rowMatchesSection(row)) return;
+
+    (row.__parsedTags || []).forEach(tag => {
+      counts[tag] = (counts[tag] || 0) + 1;
+    });
+  });
+
+  let allTags = Object.keys(counts);
+
+  if (tagSearchQuery) {
+    const q = tagSearchQuery.toLowerCase();
+    allTags = allTags.filter(tag => tag.toLowerCase().includes(q));
+  }
+
+  const sortedTags = allTags.sort((a, b) => {
+    const diff = (counts[b] || 0) - (counts[a] || 0);
+    if (diff !== 0) return diff;
+    return a.localeCompare(b, undefined, { sensitivity: "base" });
+  });
+
+  const visibleTags = showAllTags
+    ? sortedTags
+    : sortedTags.slice(0, TAGS_VISIBLE_DEFAULT);
+
+  const hiddenCount = Math.max(0, sortedTags.length - visibleTags.length);
+
+  return {
+    allTags: sortedTags,
+    counts,
+    visibleTags,
+    hiddenCount
+  };
+}
+/* =========================
+   RENDER SECTION CHART
+========================= */
+
+function renderSectionChart() {
+  const container = d3.select("#sectionChart");
+  container.selectAll("*").remove();
+
+  const data = getSectionCounts();
+
+  if (!data.length) {
+    container.append("div")
+      .attr("class", "hint")
+      .text("No sections available.");
+    return;
+  }
+
+  const width = SECTION_CHART.width;
+  const rowHeight = SECTION_CHART.rowHeight;
+  const labelWidth = SECTION_CHART.labelWidth;
+  const countWidth = SECTION_CHART.countWidth;
+  const barHeight = SECTION_CHART.barHeight;
+  const margin = {
+    top: SECTION_CHART.top,
+    right: SECTION_CHART.right,
+    bottom: SECTION_CHART.bottom,
+    left: SECTION_CHART.left
+  };
+
+  const innerWidth = width - margin.left - margin.right;
+  const barAreaWidth = innerWidth - labelWidth - countWidth - 12;
+  const height = margin.top + margin.bottom + data.length * rowHeight;
+
+  const x = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.count) || 1])
+    .range([0, barAreaWidth]);
+
+  const svg = container.append("svg")
+    .attr("id", "sectionChartSvg")
+    .style("width", "50%")
+    .style("min-width","400px")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMinYMin meet");
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const rows = g.selectAll(".section-bar-row")
+    .data(data, d => d.section)
+    .join("g")
+    .attr("class", d => `section-bar-row${activeSections.has(d.section) ? " active" : ""}`)
+    .attr("transform", (d, i) => `translate(0, ${i * rowHeight})`);
+
+  rows.append("text")
+    .attr("class", "section-bar-label")
+    .attr("x", labelWidth-4)
+    .attr("y", rowHeight / 2)
+    .attr("dy", "0.35em")
+    .attr("text-anchor","end")
+    .text(d => d.section)
+    .on("click", (_, d) => toggleSection(d.section));
+
+  rows.append("rect")
+    .attr("class", d => `section-bar${activeSections.has(d.section) ? " active" : ""}`)
+    .attr("x", labelWidth)
+    .attr("y", (rowHeight - barHeight) / 2)
+    .attr("width", d => x(d.count))
+    .attr("height", barHeight)
+    .on("click", (_, d) => toggleSection(d.section));
+
+  rows.append("text")
+    .attr("class", "count-label")
+    .attr("x", d => labelWidth + x(d.count) + 8)
+    .attr("y", rowHeight / 2)
+    .attr("dy", "0.35em")
+    .text(d => d.count)
+    .on("click", (_, d) => toggleSection(d.section));
+}
+
+function toggleSection(section) {
+  if (activeSections.has(section)) {
+    activeSections.clear();
+  } else {
+    activeSections.clear();
+    activeSections.add(section);
+  }
+
+  activeTags.clear();
+  tagSearchQuery = "";
+  showAllTags = false;
+
+  applyFilters();
+  renderSectionChart();
+  renderTagPanel();
+}
+
+/* =========================
+   RENDER TAG PANEL
+========================= */
+
+function makeTagButton(tag, count, isActive) {
+  const btn = document.createElement("button");
+  btn.className = "filter-btn";
+  if (isActive) btn.classList.add("active");
+
+  btn.innerHTML = `
+    <span class="label">${tag}</span>
+    <span class="count">${count}</span>
+  `;
+
+  btn.addEventListener("click", () => {
+    if (activeTags.has(tag)) {
+      activeTags.delete(tag);
+    } else {
+      activeTags.add(tag);
+    }
+
+    applyFilters();
+    renderSectionChart();
+    renderTagPanel();
+  });
+
+  return btn;
+}
+
+function renderTagPanel() {
+  const panel = document.getElementById("tagPanel");
+  panel.innerHTML = "";
+
+  const searchWrap = document.createElement("div");
+  searchWrap.className = "tag-search-wrap";
+
+  const searchInput = document.createElement("input");
+  searchInput.id = "tagSearch";
+  searchInput.type = "search";
+  searchInput.placeholder = "Search tags…";
+  searchInput.value = tagSearchQuery;
+
+  searchInput.addEventListener("input", e => {
+    tagSearchQuery = e.target.value.trim();
+    showAllTags = false;
+    renderTagPanel();
+  });
+
+  searchWrap.appendChild(searchInput);
+  panel.appendChild(searchWrap);
+
+  const { counts, visibleTags, hiddenCount, allTags } = getAdaptiveTagData();
+
+  if (!allTags.length) {
+    const empty = document.createElement("div");
+    empty.className = "hint";
+    empty.textContent = tagSearchQuery
+      ? "No tags match your search."
+      : "No tags found.";
+    panel.appendChild(empty);
+    return;
+  }
+
+  const tagButtons = document.createElement("div");
+  tagButtons.className = "button-group";
+
+  visibleTags.forEach(tag => {
+    tagButtons.appendChild(
+      makeTagButton(tag, counts[tag] || 0, activeTags.has(tag))
+    );
+  });
+
+  panel.appendChild(tagButtons);
+
+  if (hiddenCount > 0) {
+    const moreWrap = document.createElement("div");
+    moreWrap.className = "show-more-wrap";
+
+    const moreBtn = document.createElement("button");
+    moreBtn.className = "secondary-btn";
+    moreBtn.textContent = `Show ${hiddenCount} more tags`;
+
+    moreBtn.addEventListener("click", () => {
+      showAllTags = true;
+      renderTagPanel();
+    });
+
+    moreWrap.appendChild(moreBtn);
+    panel.appendChild(moreWrap);
+  }
+
+  if (showAllTags && allTags.length > TAGS_VISIBLE_DEFAULT) {
+    const lessWrap = document.createElement("div");
+    lessWrap.className = "show-more-wrap";
+
+    const lessBtn = document.createElement("button");
+    lessBtn.className = "secondary-btn";
+    lessBtn.textContent = "Show fewer tags";
+
+    lessBtn.addEventListener("click", () => {
+      showAllTags = false;
+      renderTagPanel();
+    });
+
+    lessWrap.appendChild(lessBtn);
+    panel.appendChild(lessWrap);
+  }
+}
+
+/* =========================
+   LOAD CSV
+========================= */
+
+function loadCSV() {
+  Papa.parse(CSV_PATH, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: results => {
+      rawRows = results.data.map(row => {
+        const parsedTags = parseTags(row[TAGS_COLUMN]);
+        const parsedTitle = extractTrailingYearFromTitle(row[TITLE_SOURCE_COLUMN]);
+
+        return {
+          ...row,
+          title: parsedTitle.cleanTitle,
+          year: parsedTitle.year,
+          [EXTRA_TEXT_COLUMN]: normalizeValue(row[EXTRA_TEXT_COLUMN]),
+          __parsedTags: parsedTags
+        };
+      });
+
+      buildTableHead();
+      applyFilters();
+      renderSectionChart();
+      renderTagPanel();
+    },
+    error: err => {
+      console.error("CSV load error:", err);
+      document.getElementById("tableBody").innerHTML = `
+        <tr>
+          <td colspan="${DISPLAY_COLUMNS.length}" class="muted">
+            Could not load CSV. Check CSV_PATH and file location.
+          </td>
+        </tr>
+      `;
+    }
+  });
+}
+
+/* =========================
+   CLEAR
+========================= */
+
+document.getElementById("clearFilters").addEventListener("click", () => {
+  activeSections.clear();
+  activeTags.clear();
+  tagSearchQuery = "";
+  showAllTags = false;
+
+  applyFilters();
+  renderSectionChart();
+  renderTagPanel();
+});
+
+/* =========================
+   INIT
+========================= */
+
+loadCSV();
+</script>
+</body>
+</html>
