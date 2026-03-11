@@ -446,7 +446,7 @@ th:nth-child(3), td.extras-cell{
   <div class="controls-bottom-row">
     <button id="clearFilters">Clear filters</button>
      <div class="panel">
-      <div id="resultCount" class="meta">0 briefs</div>
+      <div id="resultCount" class="meta">0 Briefs</div>
     </div>
   </div>
 </div>
@@ -583,7 +583,7 @@ function rowMatchesTags(row) {
 
 function updateCount() {
   const el = document.getElementById("resultCount");
-  el.textContent = `${filteredRows.length} brief${filteredRows.length === 1 ? "" : "s"}`;
+  el.textContent = `${filteredRows.length} Brief${filteredRows.length === 1 ? "" : "s"}`;
 }
 
 function buildTableHead() {
