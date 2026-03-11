@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Crossfiltered Brief Table</title>
+<title>Amicus Brief Collection</title>
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -45,11 +45,13 @@
   }
 
   .topbar{
+    max-width:1000px;
     position:sticky;
     top:0;
     z-index:50;
     background:var(--bg);
-    border-bottom:1px solid var(--line);
+    border-top:3px solid black;
+    border-bottom:1px solid black;
     padding:16px 18px 14px;
   }
 
@@ -62,8 +64,8 @@
 
   .controls{
     display:grid;
-    grid-template-columns: 400px 520px 320px;
-    gap:16px;
+    grid-template-columns: 320px 500px;
+    gap:0px;
     align-items:start;
   }
 
@@ -85,12 +87,15 @@
   }
 
   #clearFilters{
+    font-family:"BentonStrong";
     appearance:none;
     background:#fff;
     color:#000;
-    padding:8px 12px;
+    padding:2px 4px;
     cursor:pointer;
-    border:1px solid var(--line);
+    border:2px solid black;
+    font-size:12px;
+
   }
 
   #clearFilters:hover{
@@ -99,6 +104,7 @@
 
   .meta{
     margin-top:10px;
+    margin-left:10px;
     font-size:12px;
     color:var(--muted);
   }
@@ -107,7 +113,7 @@
     appearance:none;
     background:#fff;
     color:#000;
-    border:1px solid var(--line);
+    border:1px solid black;
     padding:2px 4px;
     cursor:pointer;
     display:inline-flex;
@@ -135,19 +141,13 @@
   .button-group{
     display:flex;
     flex-wrap:wrap;
-    gap:6px;
+    gap:4px;
   }
 
   .tag-search-wrap{
     margin:0 0 10px;
   }
 
-  #tagSearch{
-    width:100%;
-    padding:8px 10px;
-    background:#fff;
-    border:1px solid var(--line);
-  }
 
   #tagSearch:focus{
     outline:none;
@@ -165,12 +165,13 @@
   }
 
   .secondary-btn{
+    font-family:"BentonMedium";
     appearance:none;
     background:#fff;
     color:#000;
-    padding:6px 10px;
+    padding:2px 4px;
     cursor:pointer;
-    border:1px solid var(--line);
+    border:2px solid black;
     font-size:12px;
   }
 
@@ -206,17 +207,18 @@
   }
 
   .section-bar{
-    fill:var(--bar);
-    cursor:pointer;
-  }
+  cursor:pointer;
+  transition: opacity 0.15s ease;
+}
 
-  .section-bar:hover{
-    fill:var(--barHover);
-  }
+.section-bar:hover{
+  opacity:0.8;
+}
 
-  .section-bar.active{
-    fill:var(--barActive);
-  }
+.section-bar.active{
+  stroke:#000;
+  stroke-width:1.5px;
+}
 
   .section-bar-label{
     cursor:pointer;
@@ -230,6 +232,7 @@
   .table-wrap{
     padding:18px;
     overflow-x:auto;
+    max-width:900px;
   }
 
   table{
@@ -296,6 +299,127 @@
       grid-template-columns:1fr;
     }
   }
+  th:nth-child(1), td.meta-cell{
+  width: 220px;
+  min-width: 220px;
+}
+
+th:nth-child(2), td.desc-cell{
+  width: auto;
+  min-width: 420px;
+}
+
+th:nth-child(3), td.extras-cell{
+  width: 240px;
+  min-width: 240px;
+}
+
+.meta-block,
+.extras-block{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.meta-entity{
+  font-family:"BentonStrong", sans-serif;
+  font-size:12px;
+  line-height:1.25;
+}
+
+.meta-year,
+.meta-section,
+.extras-source,
+.extras-tags{
+  font-size:12px;
+  line-height:1.35;
+}
+
+.meta-year,
+.meta-section{
+  font-family:"BentonMedium";
+}
+
+.extras-label{
+  font-family:"BentonStrong", sans-serif;
+}
+
+.extras-source a,
+.desc-cell a{
+  color:#000;
+  text-decoration:underline;
+}
+
+.extras-source:empty,
+.extras-tags:empty{
+  display:none;
+}
+th:nth-child(1), td.meta-cell{
+  width: 220px;
+  min-width: 220px;
+}
+
+th:nth-child(2), td.desc-cell{
+  width: auto;
+  min-width: 420px;
+}
+
+th:nth-child(3), td.extras-cell{
+  width: 240px;
+  min-width: 240px;
+}
+
+.meta-block,
+.extras-block{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.meta-entity{
+  font-family:"BentonStrong", sans-serif;
+  font-size:14px;
+  line-height:1.25;
+}
+
+.meta-year,
+.meta-section,
+.extras-source,
+.extras-tags{
+  font-size:12px;
+  line-height:1.35;
+}
+
+
+.extras-label{
+  font-family:"BentonStrong", sans-serif;
+}
+
+.extras-source a,
+.desc-cell a{
+  color:#000;
+  text-decoration:underline;
+}
+
+.extras-source:empty,
+.extras-tags:empty{
+  display:none;
+}
+#tagPanel{
+  height: 200px;
+  overflow:auto;
+}
+.controls-footer{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:flex-start;
+}
+.controls-bottom-row{
+  display:flex;
+  justify-content:flex-start;
+}
 </style>
 </head>
 <body>
@@ -304,10 +428,10 @@
   <h1>Amicus Brief Collection</h1>
 
   <div class="controls">
+
     <div class="panel">
       <h2>Section</h2>
       <div class="section-chart-wrap">
-        <div class="section-chart-note">Click a bar to filter by section.</div>
         <div id="sectionChart"></div>
       </div>
     </div>
@@ -317,13 +441,17 @@
       <div id="tagPanel"></div>
     </div>
 
-    <div class="panel">
-      <button id="clearFilters">Clear filters</button>
+   
+
+  </div>
+
+  <div class="controls-bottom-row">
+    <button id="clearFilters">Clear filters</button>
+     <div class="panel">
       <div id="resultCount" class="meta">0 briefs</div>
     </div>
   </div>
 </div>
-
 <div class="table-wrap">
   <table id="dataTable">
     <thead>
@@ -342,15 +470,17 @@ const CSV_PATH = "output_03112026.csv";
 
 const SECTION_COLUMN = "section";
 const TAGS_COLUMN = "tags";
-
 const DISPLAY_COLUMNS = [
-  "entity",
-  "year",
-  "section",
+  "meta",
   "description_html",
-  "source",
-  "tags"
+  "extras"
 ];
+
+const SECTION_PALETTE = [
+  "#9E0B0F"
+];
+
+let sectionColorMap = {};
 
 const HTML_COLUMNS = new Set(["description_html", "source"]);
 
@@ -382,10 +512,25 @@ const activeTags = new Set();
 
 let tagSearchQuery = "";
 let showAllTags = false;
+let tagSearchDebounce = null;
 
 /* =========================
    HELPERS
 ========================= */
+function buildSectionColorMap() {
+  const sectionNames = uniqueSorted(
+    rawRows.map(row => normalizeValue(row[SECTION_COLUMN])).filter(Boolean)
+  );
+
+  sectionColorMap = {};
+  sectionNames.forEach((name, i) => {
+    sectionColorMap[name] = SECTION_PALETTE[i % SECTION_PALETTE.length];
+  });
+}
+
+function getSectionColor(section) {
+  return sectionColorMap[normalizeValue(section)] || "#cccccc";
+}
 
 function normalizeValue(v) {
   return (v ?? "").toString().trim();
@@ -426,18 +571,23 @@ function buildTableHead() {
   const tr = document.getElementById("tableHead");
   tr.innerHTML = "";
 
+  const headers = {
+    meta: "brief",
+    description_html: "description",
+    extras: "details"
+  };
+
   DISPLAY_COLUMNS.forEach(col => {
     const th = document.createElement("th");
-    th.textContent = col;
+    th.textContent = headers[col] || col;
     tr.appendChild(th);
   });
 }
 
 function getColumnClass(col) {
-  if (col === "entity") return "entity-cell";
+  if (col === "meta") return "meta-cell";
   if (col === "description_html") return "html-cell desc-cell";
-  if (col === "source") return "html-cell source-cell";
-  if (col === "tags") return "tags-cell";
+  if (col === "extras") return "extras-cell";
   return "";
 }
 
@@ -463,10 +613,30 @@ function renderTable(rows) {
       const td = document.createElement("td");
       td.className = getColumnClass(col);
 
-      if (col === TAGS_COLUMN) {
-        td.textContent = (row.__parsedTags || []).join(", ");
-      } else if (HTML_COLUMNS.has(col)) {
-        td.innerHTML = normalizeValue(row[col]);
+      if (col === "meta") {
+        td.innerHTML = `
+          <div class="meta-block">
+            <div class="meta-entity">${normalizeValue(row.entity)}</div>
+            <div class="meta-year">${normalizeValue(row.year)}</div>
+            <div class="meta-section" style="color:${getSectionColor(row.section)};">
+              ${normalizeValue(row.section)}
+            </div>
+          </div>
+        `;
+      } else if (col === "description_html") {
+        td.innerHTML = normalizeValue(row.description_html);
+      } else if (col === "extras") {
+        const tags = (row.__parsedTags || []).join(", ");
+        td.innerHTML = `
+          <div class="extras-block">
+            <div class="extras-source">
+              ${normalizeValue(row.source)}
+            </div>
+            <div class="extras-tags">
+              <span class="extras-label">Tags:</span> ${tags}
+            </div>
+          </div>
+        `;
       } else {
         td.textContent = normalizeValue(row[col]);
       }
@@ -477,9 +647,18 @@ function renderTable(rows) {
     tbody.appendChild(tr);
   });
 }
-
 function applyFilters() {
-  filteredRows = rawRows.filter(row => rowMatchesSection(row) && rowMatchesTags(row));
+  filteredRows = rawRows
+    .filter(row => rowMatchesSection(row) && rowMatchesTags(row))
+    .sort((a, b) => {
+  const ya = parseInt(a.year) || 0;
+  const yb = parseInt(b.year) || 0;
+
+  if (yb !== ya) return yb - ya;
+
+  return a.entity.localeCompare(b.entity);
+});
+
   renderTable(filteredRows);
   updateCount();
 }
@@ -627,12 +806,13 @@ function renderSectionChart() {
     .on("click", (_, d) => toggleSection(d.section));
 
   rows.append("rect")
-    .attr("class", d => `section-bar${activeSections.has(d.section) ? " active" : ""}`)
-    .attr("x", labelWidth)
-    .attr("y", (rowHeight - barHeight) / 2)
-    .attr("width", d => x(d.count))
-    .attr("height", barHeight)
-    .on("click", (_, d) => toggleSection(d.section));
+  .attr("class", d => `section-bar${activeSections.has(d.section) ? " active" : ""}`)
+  .attr("x", labelWidth)
+  .attr("y", (rowHeight - barHeight) / 2)
+  .attr("width", d => x(d.count))
+  .attr("height", barHeight)
+  .attr("fill", d => getSectionColor(d.section))
+  .on("click", (_, d) => toggleSection(d.section));
 
   rows.append("text")
     .attr("class", "count-label")
@@ -676,46 +856,34 @@ function renderTagPanel() {
   const panel = document.getElementById("tagPanel");
   panel.innerHTML = "";
 
-  const searchWrap = document.createElement("div");
-  searchWrap.className = "tag-search-wrap";
-
-  const searchInput = document.createElement("input");
-  searchInput.id = "tagSearch";
-  searchInput.type = "search";
-  searchInput.placeholder = "Search tags…";
-  searchInput.value = tagSearchQuery;
-
-  searchInput.addEventListener("input", e => {
-    tagSearchQuery = e.target.value.trim();
-    showAllTags = false;
-    renderTagPanel();
-  });
-
-  searchWrap.appendChild(searchInput);
-  panel.appendChild(searchWrap);
-
   const { counts, visibleTags, hiddenCount, allTags } = getAdaptiveTagData();
+
+  const scrollArea = document.createElement("div");
+  scrollArea.className = "tag-scroll-area";
+
+  if (!showAllTags) {
+    scrollArea.classList.add("is-collapsed");
+  }
+
+  panel.appendChild(scrollArea);
 
   if (!allTags.length) {
     const empty = document.createElement("div");
     empty.className = "hint";
-    empty.textContent = tagSearchQuery
-      ? "No tags match your search."
-      : "No tags found.";
-    panel.appendChild(empty);
-    return;
+    empty.textContent = "No tags found.";
+    scrollArea.appendChild(empty);
+  } else {
+    const tagButtons = document.createElement("div");
+    tagButtons.className = "button-group";
+
+    visibleTags.forEach(tag => {
+      tagButtons.appendChild(
+        makeTagButton(tag, counts[tag] || 0, activeTags.has(tag))
+      );
+    });
+
+    scrollArea.appendChild(tagButtons);
   }
-
-  const tagButtons = document.createElement("div");
-  tagButtons.className = "button-group";
-
-  visibleTags.forEach(tag => {
-    tagButtons.appendChild(
-      makeTagButton(tag, counts[tag] || 0, activeTags.has(tag))
-    );
-  });
-
-  panel.appendChild(tagButtons);
 
   if (hiddenCount > 0) {
     const moreWrap = document.createElement("div");
@@ -768,7 +936,7 @@ function loadCSV() {
           __parsedTags: parseTags(row[TAGS_COLUMN])
         };
       });
-
+      buildSectionColorMap();
       buildTableHead();
       applyFilters();
       renderSectionChart();
