@@ -3,30 +3,30 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Adaptive Crossfiltered Table</title>
+<title>Crossfiltered Brief Table</title>
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 
 <style>
-    @font-face {
-  font-family: "Benton";
-  src: url("Benton Sans/Benton Sans Book.otf");
-}
-@font-face {
-  font-family: "BentonStrong";
-  src: url("Benton Sans/Benton Sans Bold.otf");
-}
-@font-face {
-  font-family: "BentonMedium";
-  src: url("Benton Sans/Benton Sans Medium.otf");
-}
+  @font-face {
+    font-family: "Benton";
+    src: url("Benton Sans/Benton Sans Book.otf");
+  }
+  @font-face {
+    font-family: "BentonStrong";
+    src: url("Benton Sans/Benton Sans Bold.otf");
+  }
+  @font-face {
+    font-family: "BentonMedium";
+    src: url("Benton Sans/Benton Sans Medium.otf");
+  }
+
   :root{
     --bg:#ffffff;
     --text:#000000;
     --muted:#666666;
     --line:#d9d9d9;
-    --panel:#f7f7f7;
     --hover:#f3f3f3;
     --active:#000000;
     --activeText:#ffffff;
@@ -39,7 +39,7 @@
 
   body{
     margin:0;
-    font-family: "Benton", sans-serif;
+    font-family:"Benton", sans-serif;
     color:var(--text);
     background:var(--bg);
   }
@@ -57,11 +57,12 @@
     margin:0 0 12px;
     font-size:24px;
     line-height:1.15;
+    font-family:"BentonStrong", sans-serif;
   }
 
   .controls{
     display:grid;
-  grid-template-columns: 400px 520px 320px;
+    grid-template-columns: 400px 520px 320px;
     gap:16px;
     align-items:start;
   }
@@ -75,6 +76,7 @@
     font-size:12px;
     text-transform:uppercase;
     letter-spacing:.06em;
+    font-family:"BentonStrong", sans-serif;
   }
 
   button,
@@ -88,6 +90,7 @@
     color:#000;
     padding:8px 12px;
     cursor:pointer;
+    border:1px solid var(--line);
   }
 
   #clearFilters:hover{
@@ -104,14 +107,14 @@
     appearance:none;
     background:#fff;
     color:#000;
+    border:1px solid var(--line);
     padding:2px 4px;
     cursor:pointer;
     display:inline-flex;
     align-items:center;
-    gap:2px;
+    gap:4px;
     line-height:1;
     font-size:12px;
-    border:1px solid #000;
   }
 
   .filter-btn:hover{
@@ -121,21 +124,18 @@
   .filter-btn.active{
     background:var(--active);
     color:var(--activeText);
+    border-color:#000;
   }
 
   .filter-btn .count{
-    font-size:12px;
+    font-size:11px;
     opacity:.7;
-  }
-
-  .filter-btn.active .count{
-    opacity:.85;
   }
 
   .button-group{
     display:flex;
     flex-wrap:wrap;
-    gap:8px;
+    gap:6px;
   }
 
   .tag-search-wrap{
@@ -144,8 +144,9 @@
 
   #tagSearch{
     width:100%;
-    padding:9px 11px;
+    padding:8px 10px;
     background:#fff;
+    border:1px solid var(--line);
   }
 
   #tagSearch:focus{
@@ -156,23 +157,7 @@
     font-size:12px;
     color:var(--muted);
     line-height:1.4;
-    padding:10px 12px;
-  }
-
-  .selected-tags{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin:0 0 10px;
-  }
-
-  .selected-chip-label{
-    display:block;
-    margin:0 0 6px;
-    font-size:12px;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:.05em;
+    padding:6px 0;
   }
 
   .show-more-wrap{
@@ -183,8 +168,10 @@
     appearance:none;
     background:#fff;
     color:#000;
-    padding:8px 12px;
+    padding:6px 10px;
     cursor:pointer;
+    border:1px solid var(--line);
+    font-size:12px;
   }
 
   .secondary-btn:hover{
@@ -201,8 +188,11 @@
     margin:0 0 8px;
   }
 
-  #sectionChart{
-    width:100%;
+  #sectionChart svg{
+    display:block;
+    width:auto;
+    height:auto;
+    max-width:none;
   }
 
   .section-bar-row text{
@@ -249,14 +239,12 @@
   }
 
   thead th{
-    /* position:sticky; */
-    top:160px;
-    z-index:20;
     background:var(--bg);
     text-align:left;
     padding:10px 8px;
-    border-bottom:1px solid #000;
+    border-bottom:2px solid #000;
     white-space:nowrap;
+    vertical-align:bottom;
   }
 
   tbody td{
@@ -273,12 +261,39 @@
     color:var(--muted);
   }
 
+  td.html-cell p{
+    margin:0 0 8px;
+  }
+
+  td.html-cell p:last-child{
+    margin-bottom:0;
+  }
+
+  td.html-cell a,
+  td.source-cell a{
+    color:#000;
+    text-decoration:underline;
+  }
+
+  td.entity-cell{
+    min-width:220px;
+  }
+
+  td.desc-cell{
+    min-width:420px;
+  }
+
+  td.source-cell{
+    min-width:180px;
+  }
+
+  td.tags-cell{
+    min-width:220px;
+  }
+
   @media (max-width: 1080px){
     .controls{
-  grid-template-columns: 400px 520px 320px;
-    }
-    thead th{
-      top:310px;
+      grid-template-columns:1fr;
     }
   }
 </style>
@@ -289,7 +304,6 @@
   <h1>Amicus Brief Collection</h1>
 
   <div class="controls">
-
     <div class="panel">
       <h2>Section</h2>
       <div class="section-chart-wrap">
@@ -302,12 +316,12 @@
       <h2>Tags</h2>
       <div id="tagPanel"></div>
     </div>
+
     <div class="panel">
       <button id="clearFilters">Clear filters</button>
-      <div id="resultCount" class="meta">0 rows</div>
+      <div id="resultCount" class="meta">0 briefs</div>
     </div>
   </div>
-    
 </div>
 
 <div class="table-wrap">
@@ -324,21 +338,21 @@
    CONFIG
 ========================= */
 
-const CSV_PATH = "cases_from_docx.csv";
+const CSV_PATH = "output_03112026.csv";
 
 const SECTION_COLUMN = "section";
 const TAGS_COLUMN = "tags";
 
-const TITLE_SOURCE_COLUMN = "title";
-const EXTRA_TEXT_COLUMN = "description"; // change to your actual text column
-
 const DISPLAY_COLUMNS = [
-  "title",
+  "entity",
   "year",
   "section",
-  "description",
+  "description_html",
+  "source",
   "tags"
 ];
+
+const HTML_COLUMNS = new Set(["description_html", "source"]);
 
 const TAG_SEPARATOR = ",";
 const TAG_MULTISELECT = true;
@@ -348,7 +362,7 @@ const SECTION_CHART = {
   width: 320,
   rowHeight: 12,
   labelWidth: 180,
-  countWidth: 10,
+  countWidth: 18,
   barHeight: 8,
   top: 4,
   right: 8,
@@ -386,23 +400,6 @@ function parseTags(cellValue) {
     .filter(Boolean);
 }
 
-function extractTrailingYearFromTitle(title) {
-  const raw = normalizeValue(title);
-  const match = raw.match(/\s*\((\d{4})\)\s*$/);
-
-  if (!match) {
-    return {
-      cleanTitle: raw,
-      year: ""
-    };
-  }
-
-  return {
-    cleanTitle: raw.replace(/\s*\(\d{4}\)\s*$/, "").trim(),
-    year: match[1]
-  };
-}
-
 function uniqueSorted(values) {
   return [...new Set(values.filter(Boolean))].sort((a, b) =>
     a.localeCompare(b, undefined, { sensitivity: "base" })
@@ -436,6 +433,14 @@ function buildTableHead() {
   });
 }
 
+function getColumnClass(col) {
+  if (col === "entity") return "entity-cell";
+  if (col === "description_html") return "html-cell desc-cell";
+  if (col === "source") return "html-cell source-cell";
+  if (col === "tags") return "tags-cell";
+  return "";
+}
+
 function renderTable(rows) {
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
@@ -456,9 +461,12 @@ function renderTable(rows) {
 
     DISPLAY_COLUMNS.forEach(col => {
       const td = document.createElement("td");
+      td.className = getColumnClass(col);
 
       if (col === TAGS_COLUMN) {
         td.textContent = (row.__parsedTags || []).join(", ");
+      } else if (HTML_COLUMNS.has(col)) {
+        td.innerHTML = normalizeValue(row[col]);
       } else {
         td.textContent = normalizeValue(row[col]);
       }
@@ -502,6 +510,7 @@ function getSectionCounts() {
 /* =========================
    TAG DATA
 ========================= */
+
 function getAdaptiveTagData() {
   const counts = {};
 
@@ -539,9 +548,27 @@ function getAdaptiveTagData() {
     hiddenCount
   };
 }
+
 /* =========================
    RENDER SECTION CHART
 ========================= */
+
+function toggleSection(section) {
+  if (activeSections.has(section)) {
+    activeSections.clear();
+  } else {
+    activeSections.clear();
+    activeSections.add(section);
+  }
+
+  activeTags.clear();
+  tagSearchQuery = "";
+  showAllTags = false;
+
+  applyFilters();
+  renderSectionChart();
+  renderTagPanel();
+}
 
 function renderSectionChart() {
   const container = d3.select("#sectionChart");
@@ -578,10 +605,8 @@ function renderSectionChart() {
 
   const svg = container.append("svg")
     .attr("id", "sectionChartSvg")
-    .style("width", "50%")
-    .style("min-width","400px")
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMinYMin meet");
+    .attr("width", width)
+    .attr("height", height);
 
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -594,10 +619,10 @@ function renderSectionChart() {
 
   rows.append("text")
     .attr("class", "section-bar-label")
-    .attr("x", labelWidth-4)
+    .attr("x", labelWidth - 4)
     .attr("y", rowHeight / 2)
     .attr("dy", "0.35em")
-    .attr("text-anchor","end")
+    .attr("text-anchor", "end")
     .text(d => d.section)
     .on("click", (_, d) => toggleSection(d.section));
 
@@ -611,28 +636,11 @@ function renderSectionChart() {
 
   rows.append("text")
     .attr("class", "count-label")
-    .attr("x", d => labelWidth + x(d.count) + 8)
+    .attr("x", d => labelWidth + x(d.count) + 6)
     .attr("y", rowHeight / 2)
     .attr("dy", "0.35em")
     .text(d => d.count)
     .on("click", (_, d) => toggleSection(d.section));
-}
-
-function toggleSection(section) {
-  if (activeSections.has(section)) {
-    activeSections.clear();
-  } else {
-    activeSections.clear();
-    activeSections.add(section);
-  }
-
-  activeTags.clear();
-  tagSearchQuery = "";
-  showAllTags = false;
-
-  applyFilters();
-  renderSectionChart();
-  renderTagPanel();
 }
 
 /* =========================
@@ -755,15 +763,9 @@ function loadCSV() {
     skipEmptyLines: true,
     complete: results => {
       rawRows = results.data.map(row => {
-        const parsedTags = parseTags(row[TAGS_COLUMN]);
-        const parsedTitle = extractTrailingYearFromTitle(row[TITLE_SOURCE_COLUMN]);
-
         return {
           ...row,
-          title: parsedTitle.cleanTitle,
-          year: parsedTitle.year,
-          [EXTRA_TEXT_COLUMN]: normalizeValue(row[EXTRA_TEXT_COLUMN]),
-          __parsedTags: parsedTags
+          __parsedTags: parseTags(row[TAGS_COLUMN])
         };
       });
 
