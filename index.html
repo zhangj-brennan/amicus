@@ -52,7 +52,7 @@
     background:var(--bg);
     border-top:3px solid black;
     border-bottom:1px solid black;
-    padding:16px 18px 14px;
+    padding:10px 12px 12px;
   }
 
   h1{
@@ -64,7 +64,7 @@
 
   .controls{
     display:grid;
-    grid-template-columns: 220px 400px;
+    grid-template-columns: 400px 400px;
     gap:0px;
     align-items:start;
   }
@@ -87,7 +87,7 @@
   }
 
   #clearFilters{
-    font-family:"BentonStrong";
+    font-family:"BentonMedium";
     appearance:none;
     background:#fff;
     color:#000;
@@ -106,7 +106,7 @@
     margin-top:10px;
     margin-left:10px;
     font-size:16px;
-    color:var(--muted);
+    color:black;
   }
 
   .filter-btn{
@@ -117,10 +117,11 @@
     padding:2px 4px;
     cursor:pointer;
     display:inline-flex;
-    align-items:center;
+    align-items:left;
     gap:4px;
     line-height:1;
     font-size:16px;
+    text-align:left;
   }
 
   .filter-btn:hover{
@@ -135,7 +136,7 @@
 
   .filter-btn .count{
     font-size:16px;
-    opacity:.7;
+    opacity:1;
   }
 
   .button-group{
@@ -315,14 +316,6 @@
 }
 
 .meta-year,
-.meta-section,
-.extras-source,
-.extras-tags{
-  font-size:16px;
-  line-height:1.35;
-}
-
-.meta-year,
 .meta-section{
   font-family:"BentonMedium";
 }
@@ -373,7 +366,7 @@ th:nth-child(3), td.extras-cell{
 .meta-section,
 .extras-source,
 .extras-tags{
-  font-size:16px;
+  font-size:14px;
   line-height:1.35;
 }
 
@@ -392,10 +385,7 @@ th:nth-child(3), td.extras-cell{
 .extras-tags:empty{
   display:none;
 }
-#tagPanel{
-  height: 200px;
-  overflow:auto;
-}
+
 .controls-footer{
   margin-top:14px;
   padding-top:12px;
@@ -407,6 +397,25 @@ th:nth-child(3), td.extras-cell{
   display:flex;
   justify-content:flex-start;
 }
+.filter-btn .label{
+  font-family:"BentonMedium", sans-serif;
+}
+
+.filter-btn .count{
+  font-family:"Benton", sans-serif;
+  opacity:1;
+}
+#tagPanel{
+  height: 180px;
+  overflow:auto;
+}
+.tag-btn{
+  font-size:12px;
+}
+
+.tag-btn .count{
+  font-size:12px;
+}
 </style>
 </head>
 <body>
@@ -417,10 +426,11 @@ th:nth-child(3), td.extras-cell{
   <div class="controls">
 
     <div class="panel">
-      <h2>Section</h2>
-      <div class="section-chart-wrap">
+      <h2>Subject Area</h2>
+      <!-- <div class="section-chart-wrap">
         <div id="sectionChart"></div>
-      </div>
+      </div> -->
+      <div id="sectionButtons" class="button-group"></div>
     </div>
 
     <div class="panel">
@@ -462,7 +472,11 @@ const DISPLAY_COLUMNS = [
   "description_html",
   "extras"
 ];
-
+const HEADER_LABELS = {
+  meta: "Brief",
+  description_html: "Summary",
+  extras: "Source & Tags"
+};
 const SECTION_PALETTE = [
   "#9E0B0F"
 ];
@@ -504,6 +518,23 @@ let tagSearchDebounce = null;
 /* =========================
    HELPERS
 ========================= */
+function toggleSection(section) {
+
+  if (activeSections.has(section)) {
+    activeSections.clear();
+  } else {
+    activeSections.clear();
+    activeSections.add(section);
+  }
+
+  activeTags.clear();
+  showAllTags = false;
+
+  applyFilters();
+  renderSectionButtons();
+  renderTagPanel();
+}
+
 function buildSectionColorMap() {
   const sectionNames = uniqueSorted(
     rawRows.map(row => normalizeValue(row[SECTION_COLUMN])).filter(Boolean)
@@ -558,15 +589,11 @@ function buildTableHead() {
   const tr = document.getElementById("tableHead");
   tr.innerHTML = "";
 
-  const headers = {
-    meta: "brief",
-    description_html: "description",
-    extras: "details"
-  };
-
   DISPLAY_COLUMNS.forEach(col => {
     const th = document.createElement("th");
-    th.textContent = headers[col] || col;
+
+    th.textContent = HEADER_LABELS[col] || col;
+
     tr.appendChild(th);
   });
 }
@@ -718,22 +745,48 @@ function getAdaptiveTagData() {
 /* =========================
    RENDER SECTION CHART
 ========================= */
+function renderSectionButtons() {
+  const container = document.getElementById("sectionButtons");
+  container.innerHTML = "";
 
-function toggleSection(section) {
+  const counts = {};
+
+  rawRows.forEach(row => {
+    if (!rowMatchesTags(row)) return;
+
+    const section = normalizeValue(row[SECTION_COLUMN]);
+    if (!section) return;
+
+    counts[section] = (counts[section] || 0) + 1;
+  });
+
+  const sections = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+
+  sections.forEach(section => {
+
+  const btn = document.createElement("button");
+  btn.className = "filter-btn section-btn";
+
+  const color = getSectionColor(section);
+
+  btn.style.borderColor = color;
+  btn.style.color = color;
+
   if (activeSections.has(section)) {
-    activeSections.clear();
-  } else {
-    activeSections.clear();
-    activeSections.add(section);
+    btn.classList.add("active");
+    btn.style.backgroundColor = color;
+    btn.style.color = "#fff";
   }
 
-  activeTags.clear();
-  tagSearchQuery = "";
-  showAllTags = false;
+  btn.innerHTML = `
+    <span class="label">${section}</span>
+    <span class="count">${counts[section]}</span>
+  `;
 
-  applyFilters();
-  renderSectionChart();
-  renderTagPanel();
+  btn.addEventListener("click", () => toggleSection(section));
+
+  container.appendChild(btn);
+});
 }
 
 function renderSectionChart() {
@@ -816,12 +869,12 @@ function renderSectionChart() {
 
 function makeTagButton(tag, count, isActive) {
   const btn = document.createElement("button");
-  btn.className = "filter-btn";
+  btn.className = "filter-btn tag-btn";
   if (isActive) btn.classList.add("active");
 
   btn.innerHTML = `
     <span class="label">${tag}</span>
-    <span class="count">${count}</span>
+    <span class="count ">${count}</span>
   `;
 
   btn.addEventListener("click", () => {
@@ -832,7 +885,7 @@ function makeTagButton(tag, count, isActive) {
     }
 
     applyFilters();
-    renderSectionChart();
+    renderSectionButtons();
     renderTagPanel();
   });
 
@@ -926,7 +979,7 @@ function loadCSV() {
       buildSectionColorMap();
       buildTableHead();
       applyFilters();
-      renderSectionChart();
+      renderSectionButtons();
       renderTagPanel();
     },
     error: err => {
@@ -953,7 +1006,7 @@ document.getElementById("clearFilters").addEventListener("click", () => {
   showAllTags = false;
 
   applyFilters();
-  renderSectionChart();
+  renderSectionButtons();
   renderTagPanel();
 });
 
