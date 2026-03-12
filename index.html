@@ -92,7 +92,7 @@
     appearance:none;
     background:#fff;
     color:#000;
-    padding:4px 8px;
+    padding:0px 2px;
     cursor:pointer;
     border:2px solid black;
     font-size:14px;
@@ -104,8 +104,7 @@
   }
 
   .meta{
-    margin-top:10px;
-    margin-left:10px;
+    margin:10px;
     font-size:14px;
     color:black;
   }
@@ -407,7 +406,7 @@ th:nth-child(3), td.extras-cell{
   opacity:1;
 }
 #tagPanel{
-  height: 180px;
+  max-height: 160px;
   overflow:auto;
 }
 .tag-btn{
@@ -488,7 +487,7 @@ const HTML_COLUMNS = new Set(["description_html", "source"]);
 
 const TAG_SEPARATOR = ",";
 const TAG_MULTISELECT = true;
-const TAGS_VISIBLE_DEFAULT = 20;
+const TAGS_VISIBLE_DEFAULT = 12;
 
 const SECTION_CHART = {
   width: 500,
