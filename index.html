@@ -437,10 +437,59 @@
   color:inherit;
   padding:0;
 }
+@media (max-width: 700px){
+  .table-wrap{
+    max-width:none;
+    overflow-x:visible;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td{
+    display:block;
+    width:100%;
+  }
+
+  thead{
+    display:none;
+  }
+
+  tbody tr{
+    border-bottom:2px solid #000;
+    padding:10px 0;
+  }
+
+  tbody td{
+    display:block;
+    width:100%;
+    min-width:0 !important;
+    padding:6px 10px;
+    border-bottom:none;
+  }
+
+  td.meta-cell,
+  td.desc-cell,
+  td.extras-cell{
+    width:100%;
+    min-width:0;
+  }
+
+  .meta-block,
+  .extras-block{
+    gap:4px;
+  }
+
+  td.desc-cell{
+    padding-top:8px;
+    padding-bottom:8px;
+  }
+}
 </style>
 </head>
 <body>
-NOTE!!!! NOT FOR SHARING, COLOR/SPACING/FILTER/SEARCH TBD
 <div class="topbar">
   <h1>Amicus Brief Collection</h1>
 
