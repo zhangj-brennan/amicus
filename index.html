@@ -75,7 +75,7 @@
   }
 
   .panel h2{
-    margin:0px;
+    margin:0px 0 6px;
     font-size:14px;
     text-transform:uppercase;
     letter-spacing:.06em;
@@ -95,9 +95,9 @@
     cursor:pointer;
     border:2px solid black;
     font-size:14px;
-margin-top:5px;
-margin-bottom:5px;
-line-height:1;
+    margin-top:5px;
+    margin-bottom:5px;
+    line-height:1;
   }
 
   #clearFilters:hover{
@@ -148,11 +148,6 @@ line-height:1;
 
   .tag-search-wrap{
     margin:0 0 10px;
-  }
-
-
-  #tagSearch:focus{
-    outline:none;
   }
 
   .hint{
@@ -209,18 +204,18 @@ line-height:1;
   }
 
   .section-bar{
-  cursor:pointer;
-  transition: opacity 0.15s ease;
-}
+    cursor:pointer;
+    transition: opacity 0.15s ease;
+  }
 
-.section-bar:hover{
-  opacity:0.8;
-}
+  .section-bar:hover{
+    opacity:0.8;
+  }
 
-.section-bar.active{
-  stroke:#000;
-  stroke-width:1.5px;
-}
+  .section-bar.active{
+    stroke:#000;
+    stroke-width:1.5px;
+  }
 
   .section-bar-label{
     cursor:pointer;
@@ -302,121 +297,145 @@ line-height:1;
       grid-template-columns:1fr;
     }
   }
- 
 
-.meta-block,
-.extras-block{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
+  .meta-block,
+  .extras-block{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
 
-.meta-entity{
-  font-family:"BentonStrong", sans-serif;
-  font-size:14px;
-  line-height:1;
-}
+  .meta-entity{
+    font-family:"BentonStrong", sans-serif;
+    font-size:14px;
+    line-height:1;
+  }
 
-.meta-year,
-.meta-section{
-  font-family:"BentonMedium";
-}
+  .meta-year,
+  .meta-section{
+    font-family:"BentonMedium";
+  }
 
-.extras-label{
-  font-family:"BentonStrong", sans-serif;
-}
+  .extras-label{
+    font-family:"BentonStrong", sans-serif;
+  }
 
-.extras-source a,
-.desc-cell a{
-  color:#000;
-  text-decoration:underline;
-}
+  .extras-source a,
+  .desc-cell a{
+    color:#000;
+    text-decoration:underline;
+  }
 
-.extras-source:empty,
-.extras-tags:empty{
-  display:none;
-}
-th:nth-child(1), td.meta-cell{
-  width: 180px;
-  min-width: 180px;
-}
+  .extras-source:empty,
+  .extras-tags:empty{
+    display:none;
+  }
 
-th:nth-child(2), td.desc-cell{
-  width: auto;
-  min-width: 300px;
-}
+  th:nth-child(1), td.meta-cell{
+    width: 180px;
+    min-width: 180px;
+  }
 
-th:nth-child(3), td.extras-cell{
-  width: 150px;
-  min-width: 100px;
-}
+  th:nth-child(2), td.desc-cell{
+    width: auto;
+    min-width: 300px;
+  }
 
-.meta-block,
-.extras-block{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
+  th:nth-child(3), td.extras-cell{
+    width: 150px;
+    min-width: 100px;
+  }
 
-.meta-entity{
-  font-family:"BentonStrong", sans-serif;
-  font-size:14px;
-  line-height:1;
-}
+  .meta-block,
+  .extras-block{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
 
-.meta-year,
-.meta-section,
-.extras-source,
-.extras-tags{
-  font-size:14px;
-  line-height:1;
-}
+  .meta-entity{
+    font-family:"BentonStrong", sans-serif;
+    font-size:14px;
+    line-height:1;
+  }
 
+  .meta-year,
+  .meta-section,
+  .extras-source,
+  .extras-tags{
+    font-size:14px;
+    line-height:1;
+  }
 
-.extras-label{
-  font-family:"BentonStrong", sans-serif;
-}
+  .extras-label{
+    font-family:"BentonStrong", sans-serif;
+  }
 
-.extras-source a,
-.desc-cell a{
-  color:#000;
-  text-decoration:underline;
-}
+  .extras-source a,
+  .desc-cell a{
+    color:#000;
+    text-decoration:underline;
+  }
 
-.extras-source:empty,
-.extras-tags:empty{
-  display:none;
-}
+  .extras-source:empty,
+  .extras-tags:empty{
+    display:none;
+  }
 
-.controls-footer{
-  margin: top 0px;
-  padding-top:12px;
-  border-top:1px solid var(--line);
-  display:flex;
-  justify-content:flex-start;
-}
-.controls-bottom-row{
-  display:flex;
-  justify-content:flex-start;
-}
-.filter-btn .label{
-  font-family:"BentonMedium", sans-serif;
-}
+  .controls-footer{
+    margin: top 0px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:flex-start;
+  }
 
-.filter-btn .count{
-  font-family:"Benton", sans-serif;
-  opacity:1;
-}
-#tagPanel{
-  max-height: 160px;
-  overflow:auto;
-}
-.tag-btn{
-  font-size:12px;
-}
+  .controls-bottom-row{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:12px;
+  }
 
-.tag-btn .count{
-  font-size:12px;
+  .filter-btn .label{
+    font-family:"BentonMedium", sans-serif;
+  }
+
+  .filter-btn .count{
+    font-family:"Benton", sans-serif;
+    opacity:1;
+  }
+
+  #tagPanel{
+    max-height:160px;
+    overflow:auto;
+  }
+
+  .tag-btn{
+    font-size:12px;
+  }
+
+  .tag-btn .count{
+    font-size:12px;
+  }
+
+  .search-input{
+    width:100%;
+    padding:6px 8px;
+    border:1px solid #000;
+    font-size:14px;
+    line-height:1.2;
+    background:#fff;
+    color:#000;
+  }
+
+  .search-input:focus{
+    outline:none;
+  }
+  mark.search-highlight{
+  background:#fff2a8;
+  color:inherit;
+  padding:0;
 }
 </style>
 </head>
@@ -428,10 +447,17 @@ NOTE!!!! NOT FOR SHARING, COLOR/SPACING/FILTER/SEARCH TBD
   <div class="controls">
 
     <div class="panel">
+      <h2>Search</h2>
+      <input
+        id="textSearch"
+        class="search-input"
+        type="text"
+        placeholder="Search briefs, summaries, sources, tags..."
+      />
+    </div>
+
+    <div class="panel">
       <h2>Subject Area</h2>
-      <!-- <div class="section-chart-wrap">
-        <div id="sectionChart"></div>
-      </div> -->
       <div id="sectionButtons" class="button-group"></div>
     </div>
 
@@ -440,17 +466,16 @@ NOTE!!!! NOT FOR SHARING, COLOR/SPACING/FILTER/SEARCH TBD
       <div id="tagPanel"></div>
     </div>
 
-   
-
   </div>
 
   <div class="controls-bottom-row">
     <button class="secondary-btn" id="clearFilters">Clear filters</button>
-     <div class="panel">
+    <div class="panel">
       <div id="resultCount" class="meta">0 Briefs</div>
     </div>
   </div>
 </div>
+
 <div class="table-wrap">
   <table id="dataTable">
     <thead>
@@ -513,6 +538,7 @@ let filteredRows = [];
 const activeSections = new Set();
 const activeTags = new Set();
 
+let textSearchQuery = "";
 let tagSearchQuery = "";
 let showAllTags = false;
 let tagSearchDebounce = null;
@@ -520,8 +546,90 @@ let tagSearchDebounce = null;
 /* =========================
    HELPERS
 ========================= */
-function toggleSection(section) {
 
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightText(text, query) {
+  const safeText = normalizeValue(text);
+  if (!query) return safeText;
+
+  const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+  return safeText.replace(regex, '<mark class="search-highlight">$1</mark>');
+}
+
+function highlightHtmlPreservingTags(html, query) {
+  const safeHtml = normalizeValue(html);
+  if (!query) return safeHtml;
+
+  const container = document.createElement("div");
+  container.innerHTML = safeHtml;
+
+  function walk(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.nodeValue;
+      if (!text || !query) return;
+
+      const regex = new RegExp(escapeRegExp(query), "gi");
+      if (!regex.test(text)) return;
+
+      regex.lastIndex = 0;
+
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+
+      while ((match = regex.exec(text)) !== null) {
+        const before = text.slice(lastIndex, match.index);
+        if (before) frag.appendChild(document.createTextNode(before));
+
+        const mark = document.createElement("mark");
+        mark.className = "search-highlight";
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+
+        lastIndex = match.index + match[0].length;
+      }
+
+      const after = text.slice(lastIndex);
+      if (after) frag.appendChild(document.createTextNode(after));
+
+      node.parentNode.replaceChild(frag, node);
+      return;
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      if (node.tagName === "MARK") return;
+      [...node.childNodes].forEach(walk);
+    }
+  }
+
+  [...container.childNodes].forEach(walk);
+  return container.innerHTML;
+}
+
+function stripHtml(html) {
+  const div = document.createElement("div");
+  div.innerHTML = normalizeValue(html);
+  return div.textContent || div.innerText || "";
+}
+
+function buildSearchText(row) {
+  return [
+    row.entity,
+    row.year,
+    row.section,
+    stripHtml(row.description_html),
+    row.source,
+    row.tags
+  ]
+    .map(normalizeValue)
+    .join(" ")
+    .toLowerCase();
+}
+
+function toggleSection(section) {
   if (activeSections.has(section)) {
     activeSections.clear();
   } else {
@@ -571,6 +679,11 @@ function uniqueSorted(values) {
   );
 }
 
+function rowMatchesTextSearch(row) {
+  if (!textSearchQuery) return true;
+  return (row.__searchText || "").includes(textSearchQuery);
+}
+
 function rowMatchesSection(row) {
   if (activeSections.size === 0) return true;
   return activeSections.has(normalizeValue(row[SECTION_COLUMN]));
@@ -593,9 +706,7 @@ function buildTableHead() {
 
   DISPLAY_COLUMNS.forEach(col => {
     const th = document.createElement("th");
-
     th.textContent = HEADER_LABELS[col] || col;
-
     tr.appendChild(th);
   });
 }
@@ -606,7 +717,6 @@ function getColumnClass(col) {
   if (col === "extras") return "extras-cell";
   return "";
 }
-
 function renderTable(rows) {
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
@@ -632,29 +742,29 @@ function renderTable(rows) {
       if (col === "meta") {
         td.innerHTML = `
           <div class="meta-block">
-            <div class="meta-entity">${normalizeValue(row.entity)}</div>
-            <div class="meta-year">${normalizeValue(row.year)}</div>
+            <div class="meta-entity">${highlightText(row.entity, textSearchQuery)}</div>
+            <div class="meta-year">${highlightText(row.year, textSearchQuery)}</div>
             <div class="meta-section" style="color:${getSectionColor(row.section)};">
-              ${normalizeValue(row.section)}
+              ${highlightText(row.section, textSearchQuery)}
             </div>
           </div>
         `;
       } else if (col === "description_html") {
-        td.innerHTML = normalizeValue(row.description_html);
+        td.innerHTML = highlightHtmlPreservingTags(row.description_html, textSearchQuery);
       } else if (col === "extras") {
         const tags = (row.__parsedTags || []).join(", ");
         td.innerHTML = `
           <div class="extras-block">
             <div class="extras-source">
-              ${normalizeValue(row.source)}
+              ${highlightText(row.source, textSearchQuery)}
             </div>
             <div class="extras-tags">
-              <span class="extras-label"><br></span> ${tags}
+              <span class="extras-label"><br></span> ${highlightText(tags, textSearchQuery)}
             </div>
           </div>
         `;
       } else {
-        td.textContent = normalizeValue(row[col]);
+        td.innerHTML = highlightText(row[col], textSearchQuery);
       }
 
       tr.appendChild(td);
@@ -663,17 +773,21 @@ function renderTable(rows) {
     tbody.appendChild(tr);
   });
 }
+
 function applyFilters() {
   filteredRows = rawRows
-    .filter(row => rowMatchesSection(row) && rowMatchesTags(row))
+    .filter(row =>
+      rowMatchesTextSearch(row) &&
+      rowMatchesSection(row) &&
+      rowMatchesTags(row)
+    )
     .sort((a, b) => {
-  const ya = parseInt(a.year) || 0;
-  const yb = parseInt(b.year) || 0;
+      const ya = parseInt(a.year) || 0;
+      const yb = parseInt(b.year) || 0;
 
-  if (yb !== ya) return yb - ya;
-
-  return a.entity.localeCompare(b.entity);
-});
+      if (yb !== ya) return yb - ya;
+      return a.entity.localeCompare(b.entity);
+    });
 
   renderTable(filteredRows);
   updateCount();
@@ -687,7 +801,9 @@ function getSectionCounts() {
   const counts = new Map();
 
   rawRows.forEach(row => {
+    if (!rowMatchesTextSearch(row)) return;
     if (!rowMatchesTags(row)) return;
+
     const section = normalizeValue(row[SECTION_COLUMN]);
     if (!section) return;
     counts.set(section, (counts.get(section) || 0) + 1);
@@ -710,6 +826,7 @@ function getAdaptiveTagData() {
   const counts = {};
 
   rawRows.forEach(row => {
+    if (!rowMatchesTextSearch(row)) return;
     if (!rowMatchesSection(row)) return;
 
     (row.__parsedTags || []).forEach(tag => {
@@ -745,8 +862,9 @@ function getAdaptiveTagData() {
 }
 
 /* =========================
-   RENDER SECTION CHART
+   RENDER SECTION BUTTONS
 ========================= */
+
 function renderSectionButtons() {
   const container = document.getElementById("sectionButtons");
   container.innerHTML = "";
@@ -754,6 +872,7 @@ function renderSectionButtons() {
   const counts = {};
 
   rawRows.forEach(row => {
+    if (!rowMatchesTextSearch(row)) return;
     if (!rowMatchesTags(row)) return;
 
     const section = normalizeValue(row[SECTION_COLUMN]);
@@ -762,33 +881,36 @@ function renderSectionButtons() {
     counts[section] = (counts[section] || 0) + 1;
   });
 
-  const sections = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  const sections = Object.keys(counts).sort((a, b) => {
+    const diff = counts[b] - counts[a];
+    if (diff !== 0) return diff;
+    return a.localeCompare(b, undefined, { sensitivity: "base" });
+  });
 
   sections.forEach(section => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn section-btn";
 
-  const btn = document.createElement("button");
-  btn.className = "filter-btn section-btn";
+    const color = getSectionColor(section);
 
-  const color = getSectionColor(section);
+    btn.style.borderColor = color;
+    btn.style.color = color;
 
-  btn.style.borderColor = color;
-  btn.style.color = color;
+    if (activeSections.has(section)) {
+      btn.classList.add("active");
+      btn.style.backgroundColor = color;
+      btn.style.color = "#fff";
+    }
 
-  if (activeSections.has(section)) {
-    btn.classList.add("active");
-    btn.style.backgroundColor = color;
-    btn.style.color = "#fff";
-  }
+    btn.innerHTML = `
+      <span class="label">${section}</span>
+      <span class="count">${counts[section]}</span>
+    `;
 
-  btn.innerHTML = `
-    <span class="label">${section}</span>
-    <span class="count">${counts[section]}</span>
-  `;
+    btn.addEventListener("click", () => toggleSection(section));
 
-  btn.addEventListener("click", () => toggleSection(section));
-
-  container.appendChild(btn);
-});
+    container.appendChild(btn);
+  });
 }
 
 function renderSectionChart() {
@@ -848,13 +970,13 @@ function renderSectionChart() {
     .on("click", (_, d) => toggleSection(d.section));
 
   rows.append("rect")
-  .attr("class", d => `section-bar${activeSections.has(d.section) ? " active" : ""}`)
-  .attr("x", labelWidth)
-  .attr("y", (rowHeight - barHeight) / 2)
-  .attr("width", d => x(d.count))
-  .attr("height", barHeight)
-  .attr("fill", d => getSectionColor(d.section))
-  .on("click", (_, d) => toggleSection(d.section));
+    .attr("class", d => `section-bar${activeSections.has(d.section) ? " active" : ""}`)
+    .attr("x", labelWidth)
+    .attr("y", (rowHeight - barHeight) / 2)
+    .attr("width", d => x(d.count))
+    .attr("height", barHeight)
+    .attr("fill", d => getSectionColor(d.section))
+    .on("click", (_, d) => toggleSection(d.section));
 
   rows.append("text")
     .attr("class", "count-label")
@@ -876,7 +998,7 @@ function makeTagButton(tag, count, isActive) {
 
   btn.innerHTML = `
     <span class="label">${tag}</span>
-    <span class="count ">${count}</span>
+    <span class="count">${count}</span>
   `;
 
   btn.addEventListener("click", () => {
@@ -973,11 +1095,14 @@ function loadCSV() {
     skipEmptyLines: true,
     complete: results => {
       rawRows = results.data.map(row => {
+        const parsedTags = parseTags(row[TAGS_COLUMN]);
         return {
           ...row,
-          __parsedTags: parseTags(row[TAGS_COLUMN])
+          __parsedTags: parsedTags,
+          __searchText: buildSearchText(row)
         };
       });
+
       buildSectionColorMap();
       buildTableHead();
       applyFilters();
@@ -998,14 +1123,29 @@ function loadCSV() {
 }
 
 /* =========================
+   EVENTS
+========================= */
+
+document.getElementById("textSearch").addEventListener("input", e => {
+  textSearchQuery = normalizeValue(e.target.value).toLowerCase();
+  applyFilters();
+  renderSectionButtons();
+  renderTagPanel();
+});
+
+/* =========================
    CLEAR
 ========================= */
 
 document.getElementById("clearFilters").addEventListener("click", () => {
   activeSections.clear();
   activeTags.clear();
+  textSearchQuery = "";
   tagSearchQuery = "";
   showAllTags = false;
+
+  const searchInput = document.getElementById("textSearch");
+  if (searchInput) searchInput.value = "";
 
   applyFilters();
   renderSectionButtons();
