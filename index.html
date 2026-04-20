@@ -11,7 +11,7 @@
 <style>
   @font-face {
     font-family: "Benton";
-    src: url("Benton Sans/Benton Sans Book.otf");
+    src: url("Benton Sans/Benton Sans Regular.otf");
   }
   @font-face {
     font-family: "BentonStrong";
@@ -90,17 +90,19 @@
   }
 
   #clearFilters{
-    font-family:"Benton";
+    font-family:"BentonSTRONG";
     appearance:none;
     background:#fff;
     color:#000;
     cursor:pointer;
     border:1px solid black;
-    font-size:14px;
+    font-size:11px;
     margin-top:5px;
     margin-bottom:5px;
-    line-height:1.6;
-    padding:2px 8px;
+    line-height:1.2;
+    padding:4px 8px;
+    letter-spacing:.05em;
+
   }
 
   #clearFilters:hover{
@@ -283,9 +285,12 @@
   }
 
   td.html-cell a,
+  td.desc-cell a,
   td.source-cell a{
     color:#000;
     text-decoration:underline;
+    font-family:"BentonStrong";
+    font-size:12px;
   }
 
   td.entity-cell{
@@ -452,8 +457,8 @@
 
   .tag-btn{
     position:relative;
-    padding-right:8px;
-    margin-right:8px;
+    padding-right:12px;
+    margin-right:4px;
   }
 
   .tag-btn:hover{
@@ -609,7 +614,7 @@
   </div>
 
   <div class="controls-bottom-row">
-    <button class="secondary-btn" id="clearFilters">Clear filters</button>
+    <button class="secondary-btn" id="clearFilters">CLEAR FILTERS</button>
     <div id="resultCount" class="meta">Showing 0 Briefs</div>
   </div>
 </div>
@@ -911,14 +916,15 @@ function renderTable(rows) {
 
         td.innerHTML = `
           <div class="desc-block">
-            ${source ? `
+           
+            <div class="desc-text">
+              ${highlightHtmlPreservingTags(row.description_html, textSearchQuery)}
+            </div>
+             ${source ? `
               <div class="desc-source">
                 ${highlightText(row.source, textSearchQuery)}
               </div>
             ` : ""}
-            <div class="desc-text">
-              ${highlightHtmlPreservingTags(row.description_html, textSearchQuery)}
-            </div>
           </div>
         `;
 
