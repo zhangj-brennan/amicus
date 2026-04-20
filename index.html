@@ -72,6 +72,8 @@
   .panel{
     min-width:0;
     margin-top:0px;
+      margin-bottom:12px;
+
   }
 
   .panel h2{
@@ -115,7 +117,7 @@
     appearance:none;
     background:#fff;
     color:#000;
-    border:1px solid black;
+    border:none;
     padding:4px 8px 2px;
     cursor:pointer;
     display:inline-flex;
@@ -495,7 +497,7 @@
   }
 
   tbody tr{
-    border-bottom:2px solid #000;
+    border-bottom:1px solid #000;
     padding:10px 0;
   }
 
@@ -630,7 +632,7 @@ const HEADER_LABELS = {
   // extras: "SOURCE & TAGS"
 };
 const SECTION_PALETTE = [
-  "#9E0B0F"
+  "#3995B2"
 ];
 
 let sectionColorMap = {};
@@ -1032,14 +1034,12 @@ function renderSectionButtons() {
 
     const color = getSectionColor(section);
 
-    btn.style.borderColor = color;
-    btn.style.color = color;
+   btn.style.backgroundColor = color;
+btn.style.color = "#fff";
 
-    if (activeSections.has(section)) {
-      btn.classList.add("active");
-      btn.style.backgroundColor = color;
-      btn.style.color = "#fff";
-    }
+if (activeSections.has(section)) {
+  btn.classList.add("active");
+}
 
     btn.innerHTML = `
       <span class="label">${section}</span>
