@@ -73,8 +73,7 @@
   .panel{
     min-width:0;
     margin-top:0px;
-      margin-bottom:12px;
-
+    margin-bottom:12px;
   }
 
   .panel h2{
@@ -112,12 +111,15 @@
     font-size:14px;
     color:black;
   }
-.section-btn.active{
-  filter:brightness(0.75);   /* 👈 darker = selected */
-}
-.section-btn:hover{
-  filter:brightness(0.9);
-}
+
+  .section-btn.active{
+    filter:brightness(0.75);
+  }
+
+  .section-btn:hover{
+    filter:brightness(0.9);
+  }
+
   .filter-btn{
     appearance:none;
     background:#fff;
@@ -255,8 +257,7 @@
     vertical-align:bottom;
     font-family:"BentonStrong";
     font-size:11px;
-        letter-spacing:.05em;
-
+    letter-spacing:.05em;
   }
 
   tbody td{
@@ -302,17 +303,19 @@
   td.tags-cell{
     min-width:220px;
   }
-.desc-text{
-  font-size:12px;
-  line-height:1.4;
-  margin:0 0 12px;
-}
+
+  .desc-text{
+    font-size:12px;
+    line-height:1.4;
+    margin:0 0 12px;
+  }
+
   .desc-source{
-  font-family:"BentonStrong", sans-serif;
-  font-size:14px;
-  line-height:1.3;
-  margin-bottom:10px;
-}
+    font-family:"BentonStrong", sans-serif;
+    font-size:14px;
+    line-height:1.3;
+    margin-bottom:10px;
+  }
 
   @media (max-width: 1080px){
     .controls{
@@ -412,14 +415,14 @@
     justify-content:flex-start;
   }
 
-.controls-bottom-row{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;   /* 👈 left align everything */
-  justify-content:flex-start;
-  gap:6px;
-  margin-top:16px;
-}
+  .controls-bottom-row{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    gap:6px;
+    margin-top:16px;
+  }
 
   .filter-btn .label{
     font-family:"BentonMedium", sans-serif;
@@ -434,35 +437,40 @@
     max-height:160px;
     overflow:auto;
   }
-  .tag-btn{
-  background:none;
-  border:none;
-  padding:0;
-  margin:0;
-  font:inherit;
-  color:inherit;
-  cursor:pointer;
-  display:inline;
-  font-size:12px;
-}
-.tag-btn{
-  position:relative;
-  padding-right:8px;
-  margin-right:8px;
-}
-.tag-btn:hover{
-  text-decoration:underline;
-}
 
-.tag-btn.active{
-  font-family:"BentonStrong", sans-serif;
-}
-.tag-btn:not(:last-child)::after{
-  content:"|";
-  position:absolute;
-  right:0;
-  color:#999;
-}
+  .tag-btn{
+    background:none;
+    border:none;
+    padding:0;
+    margin:0;
+    font:inherit;
+    color:inherit;
+    cursor:pointer;
+    display:inline;
+    font-size:12px;
+  }
+
+  .tag-btn{
+    position:relative;
+    padding-right:8px;
+    margin-right:8px;
+  }
+
+  .tag-btn:hover{
+    text-decoration:underline;
+  }
+
+  .tag-btn.active{
+    font-family:"BentonStrong", sans-serif;
+  }
+
+  .tag-btn:not(:last-child)::after{
+    content:"|";
+    position:absolute;
+    right:0;
+    color:#999;
+  }
+
   .search-input{
     width:100%;
     padding:6px 8px;
@@ -476,95 +484,97 @@
   .search-input:focus{
     outline:none;
   }
+
   mark.search-highlight{
-  background:#fff2a8;
-  color:inherit;
-  padding:0;
-}
-
-@media (max-width: 700px){
-  .table-wrap{
-    max-width:none;
-    overflow-x:visible;
-  }
-  .topbar{
-    position:static;
-    top:auto;
+    background:#fff2a8;
+    color:inherit;
+    padding:0;
   }
 
-  table,
-  thead,
-  tbody,
-  tr,
-  th,
-  td{
-    display:block;
-    width:100%;
+  @media (max-width: 700px){
+    .table-wrap{
+      max-width:none;
+      overflow-x:visible;
+    }
+
+    .topbar{
+      position:static;
+      top:auto;
+    }
+
+    table,
+    thead,
+    tbody,
+    tr,
+    th,
+    td{
+      display:block;
+      width:100%;
+    }
+
+    thead{
+      display:none;
+    }
+
+    tbody tr{
+      border-bottom:1px solid #000;
+      padding:10px 0;
+    }
+
+    tbody td{
+      display:block;
+      width:100%;
+      min-width:0 !important;
+      padding:6px 10px;
+      border-bottom:none;
+    }
+
+    td.meta-cell,
+    td.desc-cell,
+    td.extras-cell{
+      width:100%;
+      min-width:0;
+    }
+
+    .meta-block,
+    .extras-block{
+      gap:4px;
+    }
+
+    td.desc-cell{
+      padding-top:8px;
+      padding-bottom:8px;
+    }
   }
 
-  thead{
-    display:none;
+  .panel-header{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-bottom:6px;
   }
 
-  tbody tr{
-    border-bottom:1px solid #000;
-    padding:10px 0;
+  #tagControls{
+    display:flex;
+    gap:6px;
   }
 
-  tbody td{
-    display:block;
-    width:100%;
-    min-width:0 !important;
-    padding:6px 10px;
-    border-bottom:none;
-  }
-
-  td.meta-cell,
-  td.desc-cell,
-  td.extras-cell{
-    width:100%;
-    min-width:0;
-  }
-
-  .meta-block,
-  .extras-block{
-    gap:4px;
-  }
-
-  td.desc-cell{
-    padding-top:8px;
-    padding-bottom:8px;
-  }
-}
-.panel-header{
-  display:flex;
-  align-items:baseline;   /* aligns text nicely */
-  gap:8px;                /* space between “Tags” and the link */
-  margin-bottom:6px;
-}
-
-#tagControls{
-  display:flex;
-  gap:6px;
-}
-
-.tag-toggle{
-  background:none;
-  border:none;
-  padding:0;
-  margin:0;
-  font:inherit;           /* same font + size as h2 */
-  color:inherit;
-  cursor:pointer;
-  text-decoration:underline; /* optional, feels like a link */
-  font-size:11px;
+  .tag-toggle{
+    background:none;
+    border:none;
+    padding:0;
+    margin:0;
+    font:inherit;
+    color:inherit;
+    cursor:pointer;
+    text-decoration:underline;
+    font-size:11px;
     letter-spacing:.05em;
-}
+  }
 
-.tag-toggle:hover{
-  opacity:0.7;
-}
-
+  .tag-toggle:hover{
+    opacity:0.7;
+  }
 </style>
 </head>
 <body>
@@ -588,20 +598,20 @@
       <div id="sectionButtons" class="button-group"></div>
     </div>
 
-   <div class="panel">
-  <div class="panel-header">
-    <h2>Tags</h2>
-    <div id="tagControls"></div>
-  </div>
-  <div id="tagPanel"></div>
-</div>
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Tags</h2>
+        <div id="tagControls"></div>
+      </div>
+      <div id="tagPanel"></div>
+    </div>
 
   </div>
 
   <div class="controls-bottom-row">
-  <button class="secondary-btn" id="clearFilters">Clear filters</button>
-  <div id="resultCount" class="meta">Showing 0 Briefs</div>
-</div>
+    <button class="secondary-btn" id="clearFilters">Clear filters</button>
+    <div id="resultCount" class="meta">Showing 0 Briefs</div>
+  </div>
 </div>
 
 <div class="table-wrap">
@@ -631,13 +641,11 @@ const SECTION_COLUMN = "section";
 const TAGS_COLUMN = "tags";
 const DISPLAY_COLUMNS = [
   "meta",
-  "description_html"//,
-  // "extras"
+  "description_html"
 ];
 const HEADER_LABELS = {
   meta: "BRIEF",
-  description_html: "SUMMARY"//,
-  // extras: "SOURCE & TAGS"
+  description_html: "SUMMARY"
 };
 const SECTION_PALETTE = [
   "#3995B2"
@@ -673,7 +681,7 @@ let filteredRows = [];
 const activeSections = new Set();
 const activeTags = new Set();
 
-let textSearchQuery = "";
+let textSearchQuery = [];
 let tagSearchQuery = "";
 let showAllTags = false;
 let tagSearchDebounce = null;
@@ -688,15 +696,25 @@ function escapeRegExp(str) {
 
 function highlightText(text, query) {
   const safeText = normalizeValue(text);
-  if (!query) return safeText;
+  if (!query || (Array.isArray(query) && query.length === 0)) return safeText;
 
-  const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+  const terms = Array.isArray(query) ? query : [query];
+  const filteredTerms = [...new Set(terms.filter(Boolean).sort((a, b) => b.length - a.length))];
+
+  if (!filteredTerms.length) return safeText;
+
+  const regex = new RegExp(`(${filteredTerms.map(escapeRegExp).join("|")})`, "gi");
   return safeText.replace(regex, '<mark class="search-highlight">$1</mark>');
 }
 
 function highlightHtmlPreservingTags(html, query) {
   const safeHtml = normalizeValue(html);
-  if (!query) return safeHtml;
+  if (!query || (Array.isArray(query) && query.length === 0)) return safeHtml;
+
+  const terms = Array.isArray(query) ? query : [query];
+  const filteredTerms = [...new Set(terms.filter(Boolean).sort((a, b) => b.length - a.length))];
+
+  if (!filteredTerms.length) return safeHtml;
 
   const container = document.createElement("div");
   container.innerHTML = safeHtml;
@@ -704,9 +722,9 @@ function highlightHtmlPreservingTags(html, query) {
   function walk(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.nodeValue;
-      if (!text || !query) return;
+      if (!text) return;
 
-      const regex = new RegExp(escapeRegExp(query), "gi");
+      const regex = new RegExp(filteredTerms.map(escapeRegExp).join("|"), "gi");
       if (!regex.test(text)) return;
 
       regex.lastIndex = 0;
@@ -815,8 +833,10 @@ function uniqueSorted(values) {
 }
 
 function rowMatchesTextSearch(row) {
-  if (!textSearchQuery) return true;
-  return (row.__searchText || "").includes(textSearchQuery);
+  if (!textSearchQuery || !textSearchQuery.length) return true;
+
+  const text = row.__searchText || "";
+  return textSearchQuery.every(term => text.includes(term));
 }
 
 function rowMatchesSection(row) {
@@ -852,6 +872,7 @@ function getColumnClass(col) {
   if (col === "extras") return "extras-cell";
   return "";
 }
+
 function renderTable(rows) {
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
@@ -892,7 +913,7 @@ function renderTable(rows) {
           <div class="desc-block">
             ${source ? `
               <div class="desc-source">
-                ${highlightText(source, textSearchQuery)}
+                ${highlightText(row.source, textSearchQuery)}
               </div>
             ` : ""}
             <div class="desc-text">
@@ -1042,12 +1063,12 @@ function renderSectionButtons() {
 
     const color = getSectionColor(section);
 
-   btn.style.backgroundColor = color;
-btn.style.color = "#fff";
+    btn.style.backgroundColor = color;
+    btn.style.color = "#fff";
 
-if (activeSections.has(section)) {
-  btn.classList.add("active");
-}
+    if (activeSections.has(section)) {
+      btn.classList.add("active");
+    }
 
     btn.innerHTML = `
       <span class="label">${section}</span>
@@ -1145,8 +1166,8 @@ function makeTagButton(tag, count, isActive) {
 
   btn.innerHTML = `
     <span class="label">${tag}</span>
-     <span class="count">(${count})</span>
-`;
+    <span class="count">(${count})</span>
+  `;
 
   btn.addEventListener("click", () => {
     if (activeTags.has(tag)) {
@@ -1162,6 +1183,7 @@ function makeTagButton(tag, count, isActive) {
 
   return btn;
 }
+
 function renderTagPanel() {
   const panel = document.getElementById("tagPanel");
   panel.innerHTML = "";
@@ -1171,7 +1193,6 @@ function renderTagPanel() {
 
   const { counts, visibleTags, hiddenCount, allTags } = getAdaptiveTagData();
 
-  // --- Header controls (inline with "Tags") ---
   if (controls) {
     if (hiddenCount > 0 && !showAllTags) {
       const moreBtn = document.createElement("button");
@@ -1200,7 +1221,6 @@ function renderTagPanel() {
     }
   }
 
-  // --- Tag list ---
   const scrollArea = document.createElement("div");
   scrollArea.className = "tag-scroll-area";
 
@@ -1283,7 +1303,12 @@ Could not load Google Sheet. Make sure the sheet is shared publicly or published
 ========================= */
 
 document.getElementById("textSearch").addEventListener("input", e => {
-  textSearchQuery = normalizeValue(e.target.value).toLowerCase();
+  textSearchQuery = normalizeValue(e.target.value)
+    .toLowerCase()
+    .split(",")
+    .map(d => d.trim())
+    .filter(Boolean);
+
   applyFilters();
   renderSectionButtons();
   renderTagPanel();
@@ -1296,7 +1321,7 @@ document.getElementById("textSearch").addEventListener("input", e => {
 document.getElementById("clearFilters").addEventListener("click", () => {
   activeSections.clear();
   activeTags.clear();
-  textSearchQuery = "";
+  textSearchQuery = [];
   tagSearchQuery = "";
   showAllTags = false;
 
