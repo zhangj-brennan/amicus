@@ -58,7 +58,7 @@
   h1{
     margin:0 0 12px;
     font-size:24px;
-    line-height:1.6;
+    line-height:1;
     font-family:"BentonStrong", sans-serif;
   }
 
@@ -97,7 +97,7 @@
     font-size:14px;
     margin-top:5px;
     margin-bottom:5px;
-    line-height:1.6;
+    line-height:1;
   }
 
   #clearFilters:hover{
@@ -115,12 +115,12 @@
     background:#fff;
     color:#000;
     border:1px solid black;
-    padding:4px 8px 2px;
+    padding:2px 4px;
     cursor:pointer;
     display:inline-flex;
     align-items:left;
-    gap:10px;
-    line-height:1.2;
+    gap:4px;
+    line-height:1;
     font-size:14px;
     text-align:left;
   }
@@ -356,7 +356,7 @@
   .meta-entity{
     font-family:"BentonStrong", sans-serif;
     font-size:14px;
-    line-height:1.6;
+    line-height:1;
   }
 
   .meta-year,
@@ -364,7 +364,7 @@
   .extras-source,
   .extras-tags{
     font-size:14px;
-    line-height:1.6;
+    line-height:1;
   }
 
   .extras-label{
@@ -424,7 +424,7 @@
     padding:6px 8px;
     border:1px solid #000;
     font-size:14px;
-    line-height:1.6;
+    line-height:1.2;
     background:#fff;
     color:#000;
   }
@@ -436,9 +436,6 @@
   background:#fff2a8;
   color:inherit;
   padding:0;
-}
-.desc-text{
-  line-height:1.2;
 }
 @media (max-width: 700px){
   .table-wrap{
@@ -494,7 +491,7 @@
 </head>
 <body>
 <div class="topbar">
-  <!-- <h1>Amicus Brief Database</h1> -->
+  <h1>Amicus Brief Collection</h1>
 
   <div class="controls">
 
@@ -542,26 +539,19 @@
    CONFIG
 ========================= */
 
-const GOOGLE_SHEET_ID = "1-srdEMZQ3q5b1du5_QDvsVcO-xQ6-7_ld4XKs_au1DM";
-const GOOGLE_SHEET_GID = "0";
-
-function buildGoogleSheetCsvUrl(sheetId, gid = "0") {
-  return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
-}
-
-const CSV_PATH = buildGoogleSheetCsvUrl(GOOGLE_SHEET_ID, GOOGLE_SHEET_GID);
+const CSV_PATH = "output_04142026.csv";
 
 const SECTION_COLUMN = "section";
 const TAGS_COLUMN = "tags";
 const DISPLAY_COLUMNS = [
   "meta",
-  "description_html"//,
-  // "extras"
+  "description_html",
+  "extras"
 ];
 const HEADER_LABELS = {
   meta: "BRIEF",
-  description_html: "SUMMARY"//,
-  // extras: "SOURCE & TAGS"
+  description_html: "SUMMARY",
+  extras: "SOURCE & TAGS"
 };
 const SECTION_PALETTE = [
   "#9E0B0F"
@@ -808,34 +798,20 @@ function renderTable(rows) {
             </div>
           </div>
         `;
-
       } else if (col === "description_html") {
-        const source = normalizeValue(row.source);
-
-        td.innerHTML = `
-          <div class="desc-block">
-            ${source ? `
-              <div class="desc-source">
-                ${highlightText(source, textSearchQuery)}
-              </div>
-            ` : ""}
-            <div class="desc-text">
-              ${highlightHtmlPreservingTags(row.description_html, textSearchQuery)}
-            </div>
-          </div>
-        `;
-
+        td.innerHTML = highlightHtmlPreservingTags(row.description_html, textSearchQuery);
       } else if (col === "extras") {
         const tags = (row.__parsedTags || []).join(", ");
-
         td.innerHTML = `
           <div class="extras-block">
+            <div class="extras-source">
+              ${highlightText(row.source, textSearchQuery)}
+            </div>
             <div class="extras-tags">
-              ${highlightText(tags, textSearchQuery)}
+              <span class="extras-label"><br></span> ${highlightText(tags, textSearchQuery)}
             </div>
           </div>
         `;
-
       } else {
         td.innerHTML = highlightText(row[col], textSearchQuery);
       }
@@ -1158,21 +1134,10 @@ function renderTagPanel() {
 }
 
 /* =========================
-   LOAD GOOGLE SHEET
+   LOAD CSV
 ========================= */
 
 function loadCSV() {
-  if (!GOOGLE_SHEET_ID || GOOGLE_SHEET_ID === "PASTE_YOUR_SHEET_ID_HERE") {
-    document.getElementById("tableBody").innerHTML = `
-      <tr>
-        <td colspan="${DISPLAY_COLUMNS.length}" class="muted">
-          Add your Google Sheet ID in GOOGLE_SHEET_ID to load data.
-        </td>
-      </tr>
-    `;
-    return;
-  }
-
   Papa.parse(CSV_PATH, {
     download: true,
     header: true,
@@ -1198,7 +1163,7 @@ function loadCSV() {
       document.getElementById("tableBody").innerHTML = `
         <tr>
           <td colspan="${DISPLAY_COLUMNS.length}" class="muted">
-Could not load Google Sheet. Make sure the sheet is shared publicly or published to the web, and confirm the sheet ID and gid.
+            Could not load CSV. Check CSV_PATH and file location.
           </td>
         </tr>
       `;
