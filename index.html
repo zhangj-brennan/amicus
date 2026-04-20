@@ -108,11 +108,15 @@
   }
 
   .meta{
-    margin:10px;
     font-size:14px;
     color:black;
   }
-
+.section-btn.active{
+  filter:brightness(0.75);   /* 👈 darker = selected */
+}
+.section-btn:hover{
+  filter:brightness(0.9);
+}
   .filter-btn{
     appearance:none;
     background:#fff;
@@ -407,13 +411,14 @@
     justify-content:flex-start;
   }
 
-  .controls-bottom-row{
-    display:flex;
-    justify-content:flex-start;
-    align-items:center;
-    gap:12px;
-    margin-top:10px;
-  }
+.controls-bottom-row{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;   /* 👈 left align everything */
+  justify-content:flex-start;
+  gap:6px;
+  margin-top:16px;
+}
 
   .filter-btn .label{
     font-family:"BentonMedium", sans-serif;
@@ -589,11 +594,9 @@
   </div>
 
   <div class="controls-bottom-row">
-    <button class="secondary-btn" id="clearFilters">Clear filters</button>
-    <div class="panel">
-      <div id="resultCount" class="meta">Showing 0 Briefs</div>
-    </div>
-  </div>
+  <button class="secondary-btn" id="clearFilters">Clear filters</button>
+  <div id="resultCount" class="meta">Showing 0 Briefs</div>
+</div>
 </div>
 
 <div class="table-wrap">
