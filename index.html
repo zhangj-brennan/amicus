@@ -88,16 +88,17 @@
   }
 
   #clearFilters{
-    font-family:"BentonMedium";
+    font-family:"Benton";
     appearance:none;
     background:#fff;
     color:#000;
     cursor:pointer;
-    border:2px solid black;
+    border:1px solid black;
     font-size:14px;
     margin-top:5px;
     margin-bottom:5px;
     line-height:1.6;
+    padding:2px 8px;
   }
 
   #clearFilters:hover{
@@ -136,7 +137,7 @@
   }
 
   .filter-btn .count{
-    font-size:14px;
+    font-size:12px;
     opacity:1;
   }
 
@@ -423,15 +424,35 @@
     max-height:160px;
     overflow:auto;
   }
-
   .tag-btn{
-    font-size:12px;
-  }
+  background:none;
+  border:none;
+  padding:0;
+  margin:0;
+  font:inherit;
+  color:inherit;
+  cursor:pointer;
+  display:inline;
+  font-size:12px;
+}
+.tag-btn{
+  position:relative;
+  padding-right:8px;
+  margin-right:8px;
+}
+.tag-btn:hover{
+  text-decoration:underline;
+}
 
-  .tag-btn .count{
-    font-size:12px;
-  }
-
+.tag-btn.active{
+  font-family:"BentonStrong", sans-serif;
+}
+.tag-btn:not(:last-child)::after{
+  content:"|";
+  position:absolute;
+  right:0;
+  color:#999;
+}
   .search-input{
     width:100%;
     padding:6px 8px;
@@ -522,7 +543,8 @@
   color:inherit;
   cursor:pointer;
   text-decoration:underline; /* optional, feels like a link */
-  font-size:12px;
+  font-size:11px;
+    letter-spacing:.05em;
 }
 
 .tag-toggle:hover{
@@ -1113,8 +1135,8 @@ function makeTagButton(tag, count, isActive) {
 
   btn.innerHTML = `
     <span class="label">${tag}</span>
-    <span class="count">${count}</span>
-  `;
+     <span class="count">(${count})</span>
+`;
 
   btn.addEventListener("click", () => {
     if (activeTags.has(tag)) {
