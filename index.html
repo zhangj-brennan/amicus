@@ -76,7 +76,7 @@
 
   .panel h2{
     margin:0px 0 6px;
-    font-size:14px;
+    font-size:11px;
     text-transform:uppercase;
     letter-spacing:.06em;
     font-family:"BentonStrong", sans-serif;
@@ -242,10 +242,11 @@
     background:var(--bg);
     text-align:left;
     padding:8px 8px 4px;
-    border-bottom:2px solid #000;
+    border-bottom:1px solid #000;
     white-space:nowrap;
     vertical-align:bottom;
     font-family:"BentonStrong";
+    font-size:12px;
   }
 
   tbody td{
@@ -291,6 +292,17 @@
   td.tags-cell{
     min-width:220px;
   }
+.desc-text p{
+  font-size:12px;
+  line-height:1.6;
+  margin:0 0 12px;
+}
+  .desc-source{
+  font-family:"BentonStrong", sans-serif;
+  font-size:14px;
+  line-height:1.3;
+  margin-bottom:10px;
+}
 
   @media (max-width: 1080px){
     .controls{
@@ -395,6 +407,7 @@
     justify-content:flex-start;
     align-items:center;
     gap:12px;
+    margin-top:10px;
   }
 
   .filter-btn .label{
@@ -437,9 +450,7 @@
   color:inherit;
   padding:0;
 }
-.desc-text{
-  line-height:1.2;
-}
+
 @media (max-width: 700px){
   .table-wrap{
     max-width:none;
@@ -490,6 +501,34 @@
     padding-bottom:8px;
   }
 }
+.panel-header{
+  display:flex;
+  align-items:baseline;   /* aligns text nicely */
+  gap:8px;                /* space between “Tags” and the link */
+  margin-bottom:6px;
+}
+
+#tagControls{
+  display:flex;
+  gap:6px;
+}
+
+.tag-toggle{
+  background:none;
+  border:none;
+  padding:0;
+  margin:0;
+  font:inherit;           /* same font + size as h2 */
+  color:inherit;
+  cursor:pointer;
+  text-decoration:underline; /* optional, feels like a link */
+  font-size:12px;
+}
+
+.tag-toggle:hover{
+  opacity:0.7;
+}
+
 </style>
 </head>
 <body>
@@ -513,17 +552,20 @@
       <div id="sectionButtons" class="button-group"></div>
     </div>
 
-    <div class="panel">
-      <h2>Tags</h2>
-      <div id="tagPanel"></div>
-    </div>
+   <div class="panel">
+  <div class="panel-header">
+    <h2>Tags</h2>
+    <div id="tagControls"></div>
+  </div>
+  <div id="tagPanel"></div>
+</div>
 
   </div>
 
   <div class="controls-bottom-row">
     <button class="secondary-btn" id="clearFilters">Clear filters</button>
     <div class="panel">
-      <div id="resultCount" class="meta">0 Briefs</div>
+      <div id="resultCount" class="meta">Showing 0 Briefs</div>
     </div>
   </div>
 </div>
@@ -756,7 +798,7 @@ function rowMatchesTags(row) {
 
 function updateCount() {
   const el = document.getElementById("resultCount");
-  el.textContent = `${filteredRows.length} Brief${filteredRows.length === 1 ? "" : "s"}`;
+  el.textContent = `Showing ${filteredRows.length} Brief${filteredRows.length === 1 ? "" : "s"}`;
 }
 
 function buildTableHead() {
@@ -1088,13 +1130,45 @@ function makeTagButton(tag, count, isActive) {
 
   return btn;
 }
-
 function renderTagPanel() {
   const panel = document.getElementById("tagPanel");
   panel.innerHTML = "";
 
+  const controls = document.getElementById("tagControls");
+  if (controls) controls.innerHTML = "";
+
   const { counts, visibleTags, hiddenCount, allTags } = getAdaptiveTagData();
 
+  // --- Header controls (inline with "Tags") ---
+  if (controls) {
+    if (hiddenCount > 0 && !showAllTags) {
+      const moreBtn = document.createElement("button");
+      moreBtn.className = "tag-toggle";
+      moreBtn.textContent = "SHOW ALL TAGS";
+
+      moreBtn.addEventListener("click", () => {
+        showAllTags = true;
+        renderTagPanel();
+      });
+
+      controls.appendChild(moreBtn);
+    }
+
+    if (showAllTags && allTags.length > TAGS_VISIBLE_DEFAULT) {
+      const lessBtn = document.createElement("button");
+      lessBtn.className = "tag-toggle";
+      lessBtn.textContent = "SHOW TOP TAGS";
+
+      lessBtn.addEventListener("click", () => {
+        showAllTags = false;
+        renderTagPanel();
+      });
+
+      controls.appendChild(lessBtn);
+    }
+  }
+
+  // --- Tag list ---
   const scrollArea = document.createElement("div");
   scrollArea.className = "tag-scroll-area";
 
@@ -1120,40 +1194,6 @@ function renderTagPanel() {
     });
 
     scrollArea.appendChild(tagButtons);
-  }
-
-  if (hiddenCount > 0) {
-    const moreWrap = document.createElement("div");
-    moreWrap.className = "show-more-wrap";
-
-    const moreBtn = document.createElement("button");
-    moreBtn.className = "secondary-btn";
-    moreBtn.textContent = `Show ${hiddenCount} more tags`;
-
-    moreBtn.addEventListener("click", () => {
-      showAllTags = true;
-      renderTagPanel();
-    });
-
-    moreWrap.appendChild(moreBtn);
-    panel.appendChild(moreWrap);
-  }
-
-  if (showAllTags && allTags.length > TAGS_VISIBLE_DEFAULT) {
-    const lessWrap = document.createElement("div");
-    lessWrap.className = "show-more-wrap";
-
-    const lessBtn = document.createElement("button");
-    lessBtn.className = "secondary-btn";
-    lessBtn.textContent = "Show fewer tags";
-
-    lessBtn.addEventListener("click", () => {
-      showAllTags = false;
-      renderTagPanel();
-    });
-
-    lessWrap.appendChild(lessBtn);
-    panel.appendChild(lessWrap);
   }
 }
 
