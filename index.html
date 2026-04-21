@@ -290,7 +290,6 @@
     color:#000;
     text-decoration:underline;
     font-family:"BentonStrong";
-    font-size:12px;
   }
 
   td.entity-cell{
@@ -320,7 +319,18 @@
     font-size:14px;
     line-height:1.3;
     margin-bottom:10px;
+
   }
+
+  .desc-link-block{
+  display:block;
+}
+
+.desc-link-block a{
+  color:#000;
+    font-size:14px;
+  text-decoration:underline;
+}
 
   @media (max-width: 1080px){
     .controls{
@@ -397,6 +407,8 @@
     line-height:1.6;
   }
 
+  .meta-section{
+  }
   .extras-label{
     font-family:"BentonStrong", sans-serif;
   }
@@ -580,6 +592,8 @@
   .tag-toggle:hover{
     opacity:0.7;
   }
+
+  
 </style>
 </head>
 <body>
@@ -714,15 +728,69 @@ function highlightText(text, query) {
 
 function highlightHtmlPreservingTags(html, query) {
   const safeHtml = normalizeValue(html);
-  if (!query || (Array.isArray(query) && query.length === 0)) return safeHtml;
+  if (!safeHtml) return safeHtml;
+
+  const container = document.createElement("div");
+  container.innerHTML = safeHtml;
+
+  // Wrap any link that is immediately preceded by <br><br>
+  function markTrailingLinks(root) {
+    const links = [...root.querySelectorAll("a")];
+
+    links.forEach(link => {
+      let prev = link.previousSibling;
+
+      // skip whitespace-only text nodes
+      while (
+        prev &&
+        prev.nodeType === Node.TEXT_NODE &&
+        !prev.textContent.trim()
+      ) {
+        prev = prev.previousSibling;
+      }
+
+      if (!prev || prev.nodeType !== Node.ELEMENT_NODE || prev.tagName !== "BR") {
+        return;
+      }
+
+      let prev2 = prev.previousSibling;
+
+      // skip whitespace-only text nodes
+      while (
+        prev2 &&
+        prev2.nodeType === Node.TEXT_NODE &&
+        !prev2.textContent.trim()
+      ) {
+        prev2 = prev2.previousSibling;
+      }
+
+      if (!prev2 || prev2.nodeType !== Node.ELEMENT_NODE || prev2.tagName !== "BR") {
+        return;
+      }
+
+      if (link.parentElement && link.parentElement.classList.contains("desc-link-block")) {
+        return;
+      }
+
+      const wrapper = document.createElement("span");
+      wrapper.className = "desc-link-block";
+      link.parentNode.insertBefore(wrapper, link);
+      wrapper.appendChild(link);
+    });
+  }
+
+  markTrailingLinks(container);
+
+  if (!query || (Array.isArray(query) && query.length === 0)) {
+    return container.innerHTML;
+  }
 
   const terms = Array.isArray(query) ? query : [query];
   const filteredTerms = [...new Set(terms.filter(Boolean).sort((a, b) => b.length - a.length))];
 
-  if (!filteredTerms.length) return safeHtml;
-
-  const container = document.createElement("div");
-  container.innerHTML = safeHtml;
+  if (!filteredTerms.length) {
+    return container.innerHTML;
+  }
 
   function walk(node) {
     if (node.nodeType === Node.TEXT_NODE) {
