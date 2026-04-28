@@ -942,7 +942,6 @@ function getColumnClass(col) {
   if (col === "extras") return "extras-cell";
   return "";
 }
-
 function renderTable(rows) {
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
@@ -978,19 +977,65 @@ function renderTable(rows) {
 
       } else if (col === "description_html") {
         const source = normalizeValue(row.source);
+        let descHtml = normalizeValue(row.description_html);
 
-        td.innerHTML = `
-          <div class="desc-block">
-            ${source ? `
-              <div class="desc-source">
-                ${highlightText(row.source, textSearchQuery)}
-              </div>
-            ` : ""}
-            <div class="desc-text">
-              ${highlightHtmlPreservingTags(row.description_html, textSearchQuery)}
+        const paragraphCount = (descHtml.match(/<p[\s>]/gi) || []).length;
+        const hasDoubleBreak = /<br\s*\/?>\s*<br\s*\/?>/i.test(descHtml);
+        const isMultiple = paragraphCount > 1 || hasDoubleBreak;
+
+        // Build highlighted content first
+        let descContent = highlightHtmlPreservingTags(descHtml, textSearchQuery);
+
+        if (source) {
+          const sourceHtml = `
+            <div class="desc-source">
+              ${highlightText(row.source, textSearchQuery)}
             </div>
-          </div>
-        `;
+          `;
+
+          if (isMultiple) {
+            // Insert AFTER first paragraph
+            if (descContent.match(/<\/p>/i)) {
+              descContent = descContent.replace(/<\/p>/i, `</p>${sourceHtml}`);
+            } else {
+              // fallback: split on double <br>
+              descContent = descContent.replace(
+                /(<br\s*\/?>\s*<br\s*\/?>)/i,
+                `$1${sourceHtml}`
+              );
+            }
+
+            td.innerHTML = `
+              <div class="desc-block">
+                <div class="desc-text">
+                  ${descContent}
+                </div>
+              </div>
+            `;
+
+          } else {
+            // Single paragraph → keep source on top
+            td.innerHTML = `
+              <div class="desc-block">
+                <div class="desc-source">
+                  ${highlightText(row.source, textSearchQuery)}
+                </div>
+                <div class="desc-text">
+                  ${descContent}
+                </div>
+              </div>
+            `;
+          }
+
+        } else {
+          td.innerHTML = `
+            <div class="desc-block">
+              <div class="desc-text">
+                ${descContent}
+              </div>
+            </div>
+          `;
+        }
 
       } else if (col === "extras") {
         const tags = (row.__parsedTags || []).join(", ");
