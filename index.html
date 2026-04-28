@@ -309,7 +309,7 @@
   }
 
   .desc-text{
-    font-size:12px;
+    font-size:14px;
     line-height:1.4;
     margin:0 0 12px;
   }
@@ -469,8 +469,10 @@
 
   .tag-btn{
     position:relative;
-    padding-right:12px;
+    padding:4px  8px;
     margin-right:4px;
+    border:1px solid #aaaaaa;
+
   }
 
   .tag-btn:hover{
@@ -481,12 +483,7 @@
     font-family:"BentonStrong", sans-serif;
   }
 
-  .tag-btn:not(:last-child)::after{
-    content:"|";
-    position:absolute;
-    right:0;
-    color:#999;
-  }
+
 
   .search-input{
     width:100%;
@@ -629,7 +626,7 @@
 
   <div class="controls-bottom-row">
     <button class="secondary-btn" id="clearFilters">CLEAR FILTERS</button>
-    <div id="resultCount" class="meta">Showing 0 Briefs</div>
+    <!-- <div id="resultCount" class="meta">Showing 0 Briefs</div> -->
   </div>
 </div>
 
@@ -984,15 +981,14 @@ function renderTable(rows) {
 
         td.innerHTML = `
           <div class="desc-block">
-           
-            <div class="desc-text">
-              ${highlightHtmlPreservingTags(row.description_html, textSearchQuery)}
-            </div>
-             ${source ? `
+            ${source ? `
               <div class="desc-source">
                 ${highlightText(row.source, textSearchQuery)}
               </div>
             ` : ""}
+            <div class="desc-text">
+              ${highlightHtmlPreservingTags(row.description_html, textSearchQuery)}
+            </div>
           </div>
         `;
 
@@ -1034,7 +1030,7 @@ function applyFilters() {
     });
 
   renderTable(filteredRows);
-  updateCount();
+  //updateCount();
 }
 
 /* =========================
