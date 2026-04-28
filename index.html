@@ -709,6 +709,39 @@ let tagSearchDebounce = null;
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+function moveStandaloneLinksUp(html) {
+  const pattern = /((?:<br\s*\/?>\s*){1,2})(\s*<a\b[\s\S]*?<\/a>\s*<br\s*\/?>)/gi;
+
+  const matches = [...html.matchAll(pattern)];
+  if (!matches.length) return html;
+
+  let updated = html;
+
+  matches.reverse().forEach(match => {
+    const fullMatch = match[0];
+    const breaks = match[1];
+    const linkBlock = match[2];
+
+    const startIndex = match.index;
+    const before = updated.slice(0, startIndex);
+    const after = updated.slice(startIndex + fullMatch.length);
+
+    const previousBreakMatch = [...before.matchAll(/(?:<br\s*\/?>\s*){1,2}/gi)].pop();
+
+    if (!previousBreakMatch) return;
+
+    const insertIndex = previousBreakMatch.index + previousBreakMatch[0].length;
+
+    updated =
+      updated.slice(0, insertIndex) +
+      linkBlock +
+      updated.slice(insertIndex, startIndex) +
+      breaks +
+      after;
+  });
+
+  return updated;
+}
 
 function highlightText(text, query) {
   const safeText = normalizeValue(text);
@@ -942,6 +975,37 @@ function getColumnClass(col) {
   if (col === "extras") return "extras-cell";
   return "";
 }
+function moveLinksBeforeParagraphs(html) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html;
+
+  const children = Array.from(wrapper.children);
+
+  children.forEach((el, i) => {
+    const prev = children[i - 1];
+
+    const isLinkOnlyParagraph =
+      el.tagName === "P" &&
+      el.querySelector("a") &&
+      el.textContent.trim() === el.querySelector("a").textContent.trim();
+
+    const prevIsTextParagraph =
+      prev &&
+      prev.tagName === "P" &&
+      !(
+        prev.querySelector("a") &&
+        prev.textContent.trim() === prev.querySelector("a").textContent.trim()
+      );
+
+    if (isLinkOnlyParagraph && prevIsTextParagraph) {
+      wrapper.insertBefore(el, prev);
+    }
+  });
+
+  return wrapper.innerHTML;
+}
+
+
 function renderTable(rows) {
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
@@ -984,7 +1048,11 @@ function renderTable(rows) {
         const isMultiple = paragraphCount > 1 || hasDoubleBreak;
 
         // Build highlighted content first
-        let descContent = highlightHtmlPreservingTags(descHtml, textSearchQuery);
+       if (isMultiple) {
+  descHtml = moveStandaloneLinksUp(descHtml);
+}
+
+let descContent = highlightHtmlPreservingTags(descHtml, textSearchQuery);
 
         if (source) {
           const sourceHtml = `
@@ -994,16 +1062,31 @@ function renderTable(rows) {
           `;
 
           if (isMultiple) {
-            // Insert AFTER first paragraph
-            if (descContent.match(/<\/p>/i)) {
-              descContent = descContent.replace(/<\/p>/i, `</p>${sourceHtml}`);
-            } else {
-              // fallback: split on double <br>
-              descContent = descContent.replace(
-                /(<br\s*\/?>\s*<br\s*\/?>)/i,
-                `$1${sourceHtml}`
-              );
-            }
+         // Insert BEFORE last paragraph / section
+if (descContent.match(/<p[\s>]/i)) {
+  const matches = [...descContent.matchAll(/<p[\s>]/gi)];
+  const lastMatch = matches[matches.length - 1];
+
+  if (lastMatch) {
+    const index = lastMatch.index;
+    descContent =
+      descContent.slice(0, index) +
+      sourceHtml +
+      descContent.slice(index);
+  }
+} else {
+  // fallback: insert before last text section after <br> breaks
+  const matches = [...descContent.matchAll(/(?:<br\s*\/?>\s*){1,2}/gi)];
+  const lastMatch = matches[matches.length - 1];
+
+  if (lastMatch) {
+    const index = lastMatch.index + lastMatch[0].length;
+    descContent =
+      descContent.slice(0, index) +
+      sourceHtml +
+      descContent.slice(index);
+  }
+}
 
             td.innerHTML = `
               <div class="desc-block">
