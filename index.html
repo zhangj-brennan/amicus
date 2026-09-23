@@ -427,6 +427,71 @@
     justify-content:flex-start;
   }
 
+  .topbar-title{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  .filters-hint{
+    display:none;
+    font-family:"BentonStrong", sans-serif;
+    font-size:11px;
+    letter-spacing:.06em;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+
+  /* Collapsed while scrolling: the drawer leaves the flow (margin keeps the
+     page from jumping) and opens as an overlay on hover, focus or tap. */
+  .topbar.collapsed{
+    padding-bottom:8px;
+  }
+
+  .topbar.collapsed h1{
+    margin-bottom:0;
+    font-size:18px;
+  }
+
+  .topbar.collapsed .filters-hint{
+    display:inline;
+  }
+
+  .topbar.collapsed .filters-drawer{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:var(--bg);
+    border-bottom:1px solid black;
+    padding:0 12px 12px;
+    max-height:calc(100vh - 60px);
+    overflow-y:auto;
+  }
+
+  .topbar.collapsed:focus-within .filters-drawer,
+  .topbar.collapsed.open .filters-drawer{
+    display:block;
+  }
+
+  .topbar.collapsed.open .filters-hint{
+    visibility:hidden;
+  }
+
+  /* Hover only on devices with a real pointer; touch screens tap instead,
+     since a tap leaves :hover stuck on. */
+  @media (hover: hover){
+    .topbar.collapsed:hover .filters-drawer{
+      display:block;
+    }
+
+    .topbar.collapsed:hover .filters-hint{
+      visibility:hidden;
+    }
+  }
+
   .controls-bottom-row{
     display:flex;
     flex-direction:column;
@@ -505,11 +570,6 @@
     .table-wrap{
       max-width:none;
       overflow-x:visible;
-    }
-
-    .topbar{
-      position:static;
-      top:auto;
     }
 
     table,
@@ -591,8 +651,12 @@
 </head>
 <body>
 <div class="topbar">
-  <h1>Historians' Amicus Briefs Database</h1>
+  <div class="topbar-title">
+    <h1>Historians' Amicus Briefs Database</h1>
+    <span class="filters-hint">SHOW FILTERS &#9662;</span>
+  </div>
 
+  <div class="filters-drawer" id="filtersDrawer">
   <div class="controls">
 
     <div class="panel">
@@ -623,6 +687,7 @@
   <div class="controls-bottom-row">
     <button class="secondary-btn" id="clearFilters">CLEAR FILTERS</button>
     <!-- <div id="resultCount" class="meta">Showing 0 Briefs</div> -->
+  </div>
   </div>
 </div>
 
@@ -1526,6 +1591,49 @@ document.getElementById("clearFilters").addEventListener("click", () => {
   renderSectionButtons();
   renderTagPanel();
 });
+
+/* =========================
+   COLLAPSE FILTERS ON SCROLL
+========================= */
+
+(function setupCollapsingTopbar() {
+  const topbar = document.querySelector(".topbar");
+  const drawer = document.getElementById("filtersDrawer");
+  const COLLAPSE_AT = 10;
+
+  function update() {
+    const sticky = getComputedStyle(topbar).position === "sticky";
+    const shouldCollapse = sticky && window.scrollY > COLLAPSE_AT;
+    const isCollapsed = topbar.classList.contains("collapsed");
+    if (shouldCollapse === isCollapsed) return;
+
+    if (shouldCollapse) {
+      // Reserve the drawer's height so the table does not jump up.
+      const expandedHeight = topbar.offsetHeight;
+      topbar.classList.add("collapsed");
+      topbar.style.marginBottom = (expandedHeight - topbar.offsetHeight) + "px";
+    } else {
+      topbar.classList.remove("collapsed", "open");
+      topbar.style.marginBottom = "";
+    }
+  }
+
+  // Tap to open on touch screens, where there is no hover.
+  topbar.addEventListener("click", e => {
+    if (!topbar.classList.contains("collapsed")) return;
+    if (e.composedPath().includes(drawer)) return;
+    topbar.classList.toggle("open");
+  });
+
+  // Tapping outside the bar closes the drawer. Uses the event path because
+  // filter buttons are re-rendered on click and leave the DOM.
+  document.addEventListener("click", e => {
+    if (!e.composedPath().includes(topbar)) topbar.classList.remove("open");
+  });
+
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+})();
 
 /* =========================
    INIT
