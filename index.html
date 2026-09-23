@@ -39,13 +39,14 @@
 
   body{
     margin:0;
+    max-width:900px;
     font-family:"Benton", sans-serif;
     color:var(--text);
     background:var(--bg);
   }
 
   .topbar{
-    max-width:1000px;
+    max-width:900px;
     position:sticky;
     top:0;
     z-index:50;
@@ -58,7 +59,7 @@
   h1{
     margin:0 0 12px;
     font-size:24px;
-    line-height:1.6;
+    line-height:1.2;
     font-family:"BentonStrong", sans-serif;
     letter-spacing:.02em;
   }
@@ -133,7 +134,7 @@
     align-items:left;
     gap:10px;
     line-height:1.2;
-    font-size:14px;
+    font-size:12px;
     text-align:left;
   }
 
@@ -181,7 +182,7 @@
     padding:2px 4px;
     cursor:pointer;
     border:2px solid black;
-    font-size:14px;
+    font-size:12px;
   }
 
   .secondary-btn:hover{
@@ -241,7 +242,7 @@
   .table-wrap{
     padding:0px;
     overflow-x:auto;
-    max-width:800px;
+    max-width:900px;
   }
 
   table{
@@ -372,8 +373,8 @@
   }
 
   th:nth-child(1), td.meta-cell{
-    width: 180px;
-    min-width: 180px;
+    width: 30%;
+    min-width: 140px;
   }
 
   th:nth-child(2), td.desc-cell{
@@ -438,7 +439,7 @@
     align-items:flex-start;
     justify-content:flex-start;
     gap:6px;
-    margin-top:16px;
+    margin-top:4px;
   }
 
   .filter-btn .label{
@@ -451,8 +452,9 @@
   }
 
   #tagPanel{
-    max-height:160px;
+    max-height:165px;
     overflow:auto;
+    padding-bottom:4px;
   }
 
   .tag-btn{
@@ -487,10 +489,10 @@
 
   .search-input{
     width:100%;
-    padding:6px 8px;
+    padding:4px 8px;
     border:1px solid #000;
-    font-size:14px;
-    line-height:1.6;
+    font-size:12px;
+    line-height:1.4;
     background:#fff;
     color:#000;
   }
@@ -500,8 +502,8 @@
   }
 
   mark.search-highlight{
-    background:#fff2a8;
-    color:inherit;
+    background:#007194;
+    color:#fff;
     padding:0;
   }
 
