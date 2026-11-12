@@ -1201,6 +1201,19 @@ if (descContent.match(/<p[\s>]/i)) {
 
     tbody.appendChild(tr);
   });
+
+  fixPdfDownloadLinks(tbody);
+}
+
+// Brennan Center "/media/<id>/download/<file>.pdf" links force a download
+// unless they end in "?inline=1". Clean up any stray quotes/spaces typed
+// after ".pdf" in the sheet and add "?inline=1" so the PDF opens in the browser.
+function fixPdfDownloadLinks(root) {
+  root.querySelectorAll("a[href]").forEach(a => {
+    const href = a.getAttribute("href").trim().replace(/^["']+|["']+$/g, "");
+    const match = href.match(/^(https?:\/\/(?:www\.)?brennancenter\.org\/media\/\d+\/download\/[^?#"'\s]+?\.pdf)/i);
+    if (match) a.setAttribute("href", `${match[1]}?inline=1`);
+  });
 }
 
 function applyFilters() {
@@ -1270,11 +1283,9 @@ function getAdaptiveTagData() {
     allTags = allTags.filter(tag => tag.toLowerCase().includes(q));
   }
 
-  const sortedTags = allTags.sort((a, b) => {
-    const diff = (counts[b] || 0) - (counts[a] || 0);
-    if (diff !== 0) return diff;
-    return a.localeCompare(b, undefined, { sensitivity: "base" });
-  });
+  const sortedTags = allTags.sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" })
+  );
 
   const visibleTags = showAllTags
     ? sortedTags
