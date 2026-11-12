@@ -938,7 +938,7 @@ function buildSearchText(row) {
     row.year,
     row.section,
     stripHtml(row.description_html),
-    row.source,
+    stripHtml(row.source),
     row.tags
   ]
     .map(normalizeValue)
@@ -1118,7 +1118,7 @@ let descContent = highlightHtmlPreservingTags(descHtml, textSearchQuery);
         if (source) {
           const sourceHtml = `
             <div class="desc-source">
-              ${highlightText(row.source, textSearchQuery)}
+              ${highlightHtmlPreservingTags(row.source, textSearchQuery)}
             </div>
           `;
 
@@ -1162,7 +1162,7 @@ if (descContent.match(/<p[\s>]/i)) {
             td.innerHTML = `
               <div class="desc-block">
                 <div class="desc-source">
-                  ${highlightText(row.source, textSearchQuery)}
+                  ${highlightHtmlPreservingTags(row.source, textSearchQuery)}
                 </div>
                 <div class="desc-text">
                   ${descContent}

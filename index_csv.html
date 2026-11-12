@@ -670,7 +670,7 @@ function buildSearchText(row) {
     row.year,
     row.section,
     stripHtml(row.description_html),
-    row.source,
+    stripHtml(row.source),
     row.tags
   ]
     .map(normalizeValue)
@@ -805,7 +805,7 @@ function renderTable(rows) {
         td.innerHTML = `
           <div class="extras-block">
             <div class="extras-source">
-              ${highlightText(row.source, textSearchQuery)}
+              ${highlightHtmlPreservingTags(row.source, textSearchQuery)}
             </div>
             <div class="extras-tags">
               <span class="extras-label"><br></span> ${highlightText(tags, textSearchQuery)}
